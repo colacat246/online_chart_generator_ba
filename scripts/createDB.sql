@@ -121,12 +121,3 @@ create table line_graph_config
 
 # TODO 创建默认用户，管理默认样式
 # TODO 第一行为默认样式配置
-
-# 测试数据注入
-insert into user (`name`, `password`)
-values ('test',
-        '123456');
-
-
-select *
-from user;

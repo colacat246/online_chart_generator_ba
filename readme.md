@@ -13,7 +13,7 @@
 
 ### 请求侧边栏
 
-请求地址：`/api/aside`
+请求地址：`/api/aside/graph_data`
 
 请求参数：
 
