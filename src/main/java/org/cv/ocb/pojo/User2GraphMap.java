@@ -1,11 +1,9 @@
 package org.cv.ocb.pojo;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
-public class User2GraphMap { // user2graph_map
+public class User2GraphMap {
     private Integer createdGraphId;
     private Integer userId;
     private Integer graphTypeId;

@@ -72,7 +72,7 @@ create table bar_graph_category_data
     `data_category` varchar(255) not null comment 'category',
     `data_value`    float        not null comment 'value',
     `order`         int          not null comment '第几个柱子',
-    constraint foreign key (`bar_series_id`) references user2graph_map (`created_graph_id`)
+    constraint foreign key (`bar_series_id`) references bar_graph_category_conf_set (`bar_series_id`)
         on delete cascade on update cascade
 ) engine = InnoDB
   charset = utf8mb4
@@ -119,5 +119,8 @@ create table line_graph_config
   charset = utf8mb4
   collate = utf8mb4_bin;
 
+# meta信息
+insert into graphs_meta (graph_type_id, name) values (1, 'line graph')
+insert into graphs_meta (graph_type_id, name) values (2, 'bar graph:category');
 # TODO 创建默认用户，管理默认样式
 # TODO 第一行为默认样式配置

@@ -1,9 +1,11 @@
-package org.cv.ocb.pojo;
+package org.cv.ocb.mapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.cv.ocb.mapper.UserMapper;
+import org.cv.ocb.pojo.User;
+import org.cv.ocb.utils.GenFakeData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,18 +15,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.io.IOException;
 import java.util.List;
 
 @SpringBootTest
 @Slf4j
-public class TestUser {
+@DisplayName("测试用户表")
+public class TestUserMapper {
 
     @Autowired
     private UserMapper userMapper;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private GenFakeData genFakeData;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -32,17 +34,12 @@ public class TestUser {
 
     @BeforeEach
     public void before() {
-        jdbcTemplate.update("delete from user");
-        jdbcTemplate.update("insert into user (`name`, `password`) values ('testUser', '123456')");
-        jdbcTemplate.update("insert into user (`name`, `password`) values ('tom', '556677')");
-        jdbcTemplate.update("insert into user (`name`, `password`) values ('peter', 'abc123')");
-        jdbcTemplate.update("insert into user (`name`, `password`) values ('testUser2', 'aabbcc')");
-        jdbcTemplate.update("insert into user (`name`, `password`) values ('testUser3', 'abcabc')");
+        genFakeData.addAllUser();
     }
 
     @AfterEach
     public void after() {
-        jdbcTemplate.update("delete from user");
+        genFakeData.deleteAllUser();
     }
 
     @Test
