@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.cv.ocb.pojo.User2GraphMap;
 import org.cv.ocb.utils.GenFakeData;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
@@ -43,6 +40,7 @@ public class TestUser2GraphMapMapper {
     @DisplayName("测试查询一个用户的图形")
     public void test1() throws JsonProcessingException {
         List<User2GraphMap> res = user2GraphMapMapper.getGraphsByUserId(2);
+        Assertions.assertEquals(2, res.size());
         log.info( objectMapper.writeValueAsString(res));
 
     }

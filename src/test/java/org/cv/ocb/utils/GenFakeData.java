@@ -1,5 +1,6 @@
 package org.cv.ocb.utils;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -25,7 +26,12 @@ public class GenFakeData {
 
     public void addAllUser() {
         for (String[] val : fakeUsers) {
-            jdbcTemplate.update("insert into user (`user_id`, `name`, `password`) values (?, ?, ?)", Integer.valueOf(val[0]), val[1], val[2]);
+            // bcrypt hashing
+            String password = val[2];
+            String salt = BCrypt.gensalt();
+            String hashedPw = BCrypt.hashpw(password, salt);
+
+            jdbcTemplate.update("insert into user (`user_id`, `name`, `password`) values (?, ?, ?)", Integer.valueOf(val[0]), val[1], hashedPw);
         }
     }
 

@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -48,7 +49,9 @@ public class TestUserMapper {
         User user = userMapper.getUserByName("tom");
 
         Assertions.assertNotNull(user);
-        Assertions.assertEquals("556677", user.getPassword());
+        // 检验密码
+        boolean isPwCorrect = BCrypt.checkpw("556677", user.getPassword());
+        Assertions.assertEquals(true, isPwCorrect);
         Assertions.assertEquals(1, user.getStatus());
 
         String res = objectMapper.writeValueAsString(user);
