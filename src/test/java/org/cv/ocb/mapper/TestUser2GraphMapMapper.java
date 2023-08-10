@@ -40,15 +40,10 @@ public class TestUser2GraphMapMapper {
     }
 
     @Test
-    @DisplayName("测试查询一个用户")
+    @DisplayName("测试查询一个用户的图形")
     public void test1() throws JsonProcessingException {
         List<User2GraphMap> res = user2GraphMapMapper.getGraphsByUserId(2);
         log.info( objectMapper.writeValueAsString(res));
 
-    }
-
-    @Test
-    @DisplayName("测试查询所有用户")
-    public void test2() {
     }
 }

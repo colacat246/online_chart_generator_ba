@@ -11,7 +11,7 @@ create table user
     `email`        varchar(255) unique,
     `password`     char(64)           not null comment '使用bcrypt加密后的密码',
     `status`       int                not null default 1 comment '1-正常 0-删除 2-禁用',
-    `created_time` timestamp(6)                   default current_timestamp(6)
+    `created_time` timestamp(6)       not null default current_timestamp(6)
 ) engine = InnoDB
   charset = utf8mb4
   collate = utf8mb4_bin;
@@ -44,7 +44,7 @@ create table user2graph_map
     `user_id`          int          not null comment '用户ID',
     `graph_type_id`    int          not null comment '图形的种类',
     `graph_name`       varchar(255) not null default '新图形' comment '图形名称', # 图形名称放在这里，获取侧边栏数据只查这个表就行
-    `created_time`     timestamp(6)             default current_timestamp(6),
+    `created_time`     timestamp(6) not null default current_timestamp(6),
     constraint foreign key (`user_id`) references user (`user_id`) on delete cascade on update cascade,
     constraint foreign key (`graph_type_id`) references graphs_meta (`graph_type_id`) on delete restrict on update cascade
 ) engine = InnoDB
@@ -54,10 +54,10 @@ create table user2graph_map
 # 一个图有哪些数据集合
 create table bar_graph_category_conf_set
 (
-    `bar_series_id`    int not null primary key auto_increment comment '某个数据集合',
-    `created_graph_id` int not null comment '属于那个图，外键，链接到user2graph_map表',
-    `series_name`      varchar(255) default '新系列',
-    `created_time`     timestamp(6)    default current_timestamp(6),
+    `bar_series_id`    int          not null primary key auto_increment comment '某个数据集合',
+    `created_graph_id` int          not null comment '属于那个图，外键，链接到user2graph_map表',
+    `series_name`      varchar(255)          default '新系列',
+    `created_time`     timestamp(6) not null default current_timestamp(6),
     # TODO 添加一些柱子的配置
     constraint foreign key (`created_graph_id`) references user2graph_map (`created_graph_id`)
         on delete cascade on update cascade
@@ -120,7 +120,9 @@ create table line_graph_config
   collate = utf8mb4_bin;
 
 # meta信息
-insert into graphs_meta (graph_type_id, name) values (1, 'line graph')
-insert into graphs_meta (graph_type_id, name) values (2, 'bar graph:category');
+insert into graphs_meta (graph_type_id, name)
+values (1, 'line graph')
+insert into graphs_meta (graph_type_id, name)
+values (2, 'bar graph:category');
 # TODO 创建默认用户，管理默认样式
 # TODO 第一行为默认样式配置

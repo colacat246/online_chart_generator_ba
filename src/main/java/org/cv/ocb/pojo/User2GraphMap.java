@@ -8,5 +8,5 @@ public class User2GraphMap {
     private Integer userId;
     private Integer graphTypeId;
     private String graphName;
-    private String created_time;
+    private String createdTime;
 }
