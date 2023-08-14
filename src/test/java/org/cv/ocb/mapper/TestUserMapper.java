@@ -3,18 +3,12 @@ package org.cv.ocb.mapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.cv.ocb.mapper.UserMapper;
 import org.cv.ocb.pojo.User;
 import org.cv.ocb.utils.GenFakeData;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.*;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
@@ -46,13 +40,14 @@ public class TestUserMapper {
     @Test
     @DisplayName("测试查询一个用户")
     public void testGetUserById() throws JsonProcessingException {
-        User user = userMapper.getUserByName("tom");
+        User user = userMapper.getUserById(2);
 
         Assertions.assertNotNull(user);
         // 检验密码
         boolean isPwCorrect = BCrypt.checkpw("556677", user.getPassword());
         Assertions.assertEquals(true, isPwCorrect);
         Assertions.assertEquals(1, user.getStatus());
+        Assertions.assertEquals("tom", user.getName());
 
         String res = objectMapper.writeValueAsString(user);
         log.info(res);

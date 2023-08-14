@@ -1,67 +1,84 @@
 package org.cv.ocb.scatter;
 
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.SignatureException;
-import org.junit.jupiter.api.Test;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.Jwts;
+import lombok.extern.slf4j.Slf4j;
+import org.cv.ocb.pojo.User;
+import org.cv.ocb.utils.GenFakeData;
+import org.cv.ocb.utils.JWTUtils;
+import org.cv.ocb.vo.request.UserVo;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
-
+@SpringBootTest
+@Slf4j
 public class TestJwt {
 
-    private String privateKey = "helloSpringbootlalalaramdomaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+    private String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6InRvbSIsInVzZXJJZCI6MiwiZXhwIjoxNjkyMDM2ODY1fQ.YuWk0FmGdJ4w4f8FX5ANbd4ImmKMlPcvlpPJoeoV0-E";
 
-    private String token;
+    @Autowired
+    private JWTUtils jwtUtils;
 
+    @Autowired
+    private Environment env;
+
+    @Autowired
+    private GenFakeData genFakeData;
+    @BeforeEach
+    public void beforeEach() {
+        genFakeData.deleteAllUser();
+        genFakeData.addAllUser();
+    }
+    @AfterEach
+    public void afterEach() {
+//        genFakeData.deleteAllUser();
+    }
+
+    @DisplayName("生成Token")
     @Test
     public void testGenJwt() {
-        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
-        int expirationTime = 7200; // minute
+        Integer id = 12345;
+        String name = "cvcvcv";
+        User user = new User();
+        user.setUserId(id);
+        user.setName(name);
+        String token = jwtUtils.genToken(user);
+        String privateKey = env.getProperty("jwt.private-key");
 
-        Map<String, Object> header = new HashMap<>();
-        header.put("alg", "HS256");
-        header.put("typ", "JWT");
+        JwtParser parser = Jwts.parserBuilder().setSigningKey(privateKey).build();
+        Jws<Claims> res = parser.parseClaimsJws(token);
+        Claims body = res.getBody();
+        Assertions.assertEquals(id, ((Double) body.get("userId")).intValue());
+        Assertions.assertEquals(name, body.get("userName"));
+    }
 
-        Map<String, String> claims = new HashMap<>();
-        claims.put("user_id", "2");
-        claims.put("name", "tom");
-
-        JwtBuilder builder = Jwts.builder();
-        String jwt = builder.setHeader(header)
-                .setClaims(claims)
-                .setExpiration(new Date(System.currentTimeMillis() + expirationTime * 1000)) // 设置过期时间
-                .signWith(signatureAlgorithm, privateKey)
-                .compact();
-        token = jwt;
-        System.out.println(jwt);
+    @DisplayName("检验Token")
+    @Test
+    public void testVerifyToken() {
+        UserVo userVo = jwtUtils.verifyToken(token);
+        Assertions.assertEquals(2, userVo.getUserId());
+        Assertions.assertEquals("tom", userVo.getUserName());
     }
 
     @Test
-    public void testVerifyJwt() {
-        testGenJwt();
+    public void testJwtExp() throws InterruptedException {
+        Integer id = 12345;
+        String name = "cvcvcv";
+        User user = new User();
+        user.setUserId(id);
+        user.setName(name);
+        jwtUtils.setExpTime(1);
+        String token = jwtUtils.genToken(user);
 
-        try {
-            JwtParser parser = Jwts.parserBuilder().setSigningKey(privateKey).build();
-            Jws<Claims> res = parser.parseClaimsJws(token);
-            Claims body = res.getBody();
-            JwsHeader header = res.getHeader();
-            String signature = res.getSignature();
+        Thread.sleep(2000);
 
-//            System.out.println("signature = " + signature);
-//            System.out.println("header = " + header);
-            Double exp = (Double)body.get("exp"); // 注意生成的单位是秒
-            long expLong = Math.round(exp * 1000);
-            System.out.println(System.currentTimeMillis());
-            System.out.println(expLong);
-            System.out.println(new Date(expLong));
-
-
-        } catch (SignatureException e) {
-            System.out.println("not trusted jwt");
-        }
+        UserVo userVo = jwtUtils.verifyToken(token);
+        Assertions.assertNull(userVo);
     }
 
 }

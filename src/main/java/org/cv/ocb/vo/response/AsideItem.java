@@ -1,4 +1,4 @@
-package org.cv.ocb.data;
+package org.cv.ocb.vo.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
