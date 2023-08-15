@@ -1,6 +1,6 @@
 package org.cv.ocb.interceptor;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -25,9 +25,24 @@ public class LogInInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (!(handler instanceof HandlerMethod)) return true;
-        String token = request.getHeader("x-www-auth-token");
+        Cookie[] cookies = request.getCookies();
+        Cookie userAuthCookie = null;
+        if (cookies == null) {
+            RespWriter.writeJson(response, Result.ex(StatusCode.WRONG_REQUEST_COOKIE));
+            return false;
+        }
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("user-auth-token")) userAuthCookie = cookie;
+            break;
+        }
+        if (userAuthCookie == null) {
+            RespWriter.writeJson(response, Result.ex(StatusCode.WRONG_REQUEST_COOKIE));
+            return false;
+        }
+        String token = userAuthCookie.getValue();
+
         if (token == null || token.equals("")) {
-            RespWriter.writeJson(response, Result.ex(StatusCode.REQUEST_HEADER_FAULT));
+            RespWriter.writeJson(response, Result.ex(StatusCode.WRONG_REQUEST_COOKIE));
             return false;
         }
         // TODO 优化逻辑

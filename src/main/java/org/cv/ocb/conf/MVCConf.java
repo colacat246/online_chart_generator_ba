@@ -19,6 +19,6 @@ public class MVCConf implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(logInInterceptor).addPathPatterns("/api/**");
+        registry.addInterceptor(logInInterceptor).addPathPatterns("/api/**").excludePathPatterns("/api/login");
     }
 }
