@@ -1,9 +1,6 @@
 package org.cv.ocb.scatter;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.cv.ocb.pojo.User;
 import org.cv.ocb.utils.GenFakeData;
@@ -14,12 +11,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 
 @SpringBootTest
 @Slf4j
 public class TestJwt {
 
-    private String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6InRvbSIsInVzZXJJZCI6MiwiZXhwIjoxNjkyMDM2ODY1fQ.YuWk0FmGdJ4w4f8FX5ANbd4ImmKMlPcvlpPJoeoV0-E";
+    private String tokenExpired = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6InRvbSIsInVzZXJJZCI6MiwiZXhwIjoxNjkyMDM2ODY1fQ.YuWk0FmGdJ4w4f8FX5ANbd4ImmKMlPcvlpPJoeoV0-E";
+
+    private String privateKey = "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDJ6InRvJJyjDX6";
 
     @Autowired
     private JWTUtils jwtUtils;
@@ -29,14 +32,16 @@ public class TestJwt {
 
     @Autowired
     private GenFakeData genFakeData;
+
     @BeforeEach
     public void beforeEach() {
         genFakeData.deleteAllUser();
         genFakeData.addAllUser();
     }
+
     @AfterEach
     public void afterEach() {
-//        genFakeData.deleteAllUser();
+        genFakeData.deleteAllUser();
     }
 
     @DisplayName("生成Token")
@@ -57,27 +62,25 @@ public class TestJwt {
         Assertions.assertEquals(name, body.get("userName"));
     }
 
-    @DisplayName("检验Token")
+    @DisplayName("检验正常Token")
     @Test
     public void testVerifyToken() {
+        Integer userId = 1;
+        String userName = "testUser";
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", userId);
+        claims.put("userName", userName);
+        String token = Jwts.builder().addClaims(claims).setExpiration(new Date(System.currentTimeMillis() + 7200 * 1000)).signWith(SignatureAlgorithm.HS256, privateKey).compact();
+
         UserVo userVo = jwtUtils.verifyToken(token);
-        Assertions.assertEquals(2, userVo.getUserId());
-        Assertions.assertEquals("tom", userVo.getUserName());
+        Assertions.assertEquals(userId, userVo.getUserId());
+        Assertions.assertEquals(userName, userVo.getUserName());
     }
 
+    @DisplayName("检验过期Token")
     @Test
-    public void testJwtExp() throws InterruptedException {
-        Integer id = 12345;
-        String name = "cvcvcv";
-        User user = new User();
-        user.setUserId(id);
-        user.setName(name);
-        jwtUtils.setExpTime(1);
-        String token = jwtUtils.genToken(user);
-
-        Thread.sleep(2000);
-
-        UserVo userVo = jwtUtils.verifyToken(token);
+    public void testVerifyExpToken() {
+        UserVo userVo = jwtUtils.verifyToken(tokenExpired);
         Assertions.assertNull(userVo);
     }
 
