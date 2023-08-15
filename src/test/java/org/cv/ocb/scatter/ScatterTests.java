@@ -1,43 +1,26 @@
 package org.cv.ocb.scatter;
 
-import org.cv.ocb.mapper.UserMapper;
-import org.cv.ocb.pojo.User;
-import org.cv.ocb.utils.GenFakeData;
-import org.cv.ocb.utils.JWTUtils;
 import org.cv.ocb.utils.StringUtils;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.env.Environment;
-
-import java.util.Arrays;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
+@ActiveProfiles("test")
 public class ScatterTests {
-
-    @Autowired
-    private JWTUtils jwtUtils;
-    @Autowired
-    private GenFakeData genFakeData;
-    @Autowired
-    private UserMapper userMapper;
     @Test
-    public void genToken() {
-        genFakeData.deleteAllUser();
-        genFakeData.addAllUser();
-        genFakeData.addTomsFakeGraph();
-    }
-
-    @Test
+    @DisplayName("测试StringUtils类")
     public void test1() {
         String str = null;
-        Assertions.assertEquals(true, StringUtils.isEmpty(""));
-        Assertions.assertEquals(true, StringUtils.isEmpty(str));
-        Assertions.assertEquals(false, StringUtils.isEmpty("aa"));
-        Assertions.assertEquals(true, StringUtils.hasEmpty("", "abc"));
-        Assertions.assertEquals(true, StringUtils.hasEmpty("123", "abc", null));
-        Assertions.assertEquals(false, StringUtils.hasEmpty("123", "abc", "123"));
-        Assertions.assertEquals(true, StringUtils.hasEmpty("123", null, ""));
+        Assertions.assertTrue(StringUtils.isEmpty(""));
+        Assertions.assertTrue(StringUtils.isEmpty(str));
+        Assertions.assertFalse(StringUtils.isEmpty("aa"));
+        Assertions.assertTrue(StringUtils.hasEmpty("", "abc"));
+        Assertions.assertTrue(StringUtils.hasEmpty("123", "abc", null));
+        Assertions.assertFalse(StringUtils.hasEmpty("123", "abc", "123"));
+        Assertions.assertTrue(StringUtils.hasEmpty("123", null, ""));
     }
+
 }

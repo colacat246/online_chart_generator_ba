@@ -3,13 +3,16 @@ package org.cv.ocb.scatter;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.cv.ocb.pojo.User;
-import org.cv.ocb.utils.GenFakeData;
+import org.cv.ocb.utils.InjectSql;
 import org.cv.ocb.utils.JWTUtils;
 import org.cv.ocb.vo.request.UserVo;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -17,6 +20,8 @@ import java.util.Map;
 
 
 @SpringBootTest
+@ActiveProfiles("test")
+@InjectSql
 @Slf4j
 public class TestJwt {
 
@@ -29,20 +34,6 @@ public class TestJwt {
 
     @Autowired
     private Environment env;
-
-    @Autowired
-    private GenFakeData genFakeData;
-
-    @BeforeEach
-    public void beforeEach() {
-        genFakeData.deleteAllUser();
-        genFakeData.addAllUser();
-    }
-
-    @AfterEach
-    public void afterEach() {
-        genFakeData.deleteAllUser();
-    }
 
     @DisplayName("生成Token")
     @Test

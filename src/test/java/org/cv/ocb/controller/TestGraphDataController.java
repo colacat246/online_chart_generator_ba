@@ -1,29 +1,19 @@
 package org.cv.ocb.controller;
 
-import org.cv.ocb.utils.GenFakeData;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.cv.ocb.utils.InjectSql;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
+@ActiveProfiles("test")
+@InjectSql
+@AutoConfigureMockMvc
 public class TestGraphDataController {
     @Autowired
-    private GenFakeData genFakeData;
-    @Autowired
     private MockMvc mockMvc;
-    @BeforeEach
-    public void before() {
-        genFakeData.deleteAllUser();
-        genFakeData.addAllUser();
-        genFakeData.addTomsFakeGraph();
-    }
-    @AfterEach
-    public void afterEach() {
-        genFakeData.deleteAllUser();
-    }
-
 //    @Test
 //    @DisplayName("获取用户图形列表")
 //    public void test1() throws Exception {

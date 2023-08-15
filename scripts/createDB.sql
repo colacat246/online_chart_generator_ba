@@ -1,7 +1,6 @@
-drop database if exists online_charts;
-create database online_charts;
-use online_charts;
-
+drop database if exists online_charts_test;
+create database online_charts_test;
+use online_charts_test;
 
 # 创建用户表
 create table user
@@ -121,7 +120,7 @@ create table line_graph_config
 
 # meta信息
 insert into graphs_meta (graph_type_id, name)
-values (1, 'line graph')
+values (1, 'line graph');
 insert into graphs_meta (graph_type_id, name)
 values (2, 'bar graph:category');
 # TODO 创建默认用户，管理默认样式

@@ -4,39 +4,28 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.cv.ocb.pojo.User;
-import org.cv.ocb.utils.GenFakeData;
-import org.junit.jupiter.api.*;
+import org.cv.ocb.utils.InjectSql;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
 @SpringBootTest
+@ActiveProfiles("test")
+@InjectSql
 @Slf4j
 @DisplayName("测试用户表")
 public class TestUserMapper {
 
     @Autowired
     private UserMapper userMapper;
-
-    @Autowired
-    private GenFakeData genFakeData;
-
     @Autowired
     private ObjectMapper objectMapper;
-
-
-    @BeforeEach
-    public void before() {
-        genFakeData.addAllUser();
-    }
-
-    @AfterEach
-    public void after() {
-        genFakeData.deleteAllUser();
-    }
-
     @Test
     @DisplayName("测试查询一个用户")
     public void testGetUserById() throws JsonProcessingException {
@@ -45,7 +34,7 @@ public class TestUserMapper {
         Assertions.assertNotNull(user);
         // 检验密码
         boolean isPwCorrect = BCrypt.checkpw("556677", user.getPassword());
-        Assertions.assertEquals(true, isPwCorrect);
+        Assertions.assertTrue(isPwCorrect);
         Assertions.assertEquals(1, user.getStatus());
         Assertions.assertEquals("tom", user.getName());
 
