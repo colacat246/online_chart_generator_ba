@@ -30,8 +30,8 @@ CREATE TABLE IF NOT EXISTS `online_charts_dev`.`user`
     `status`       INT(11)      NOT NULL DEFAULT '1' COMMENT '1-正常 0-删除 2-禁用',
     `created_time` TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
     PRIMARY KEY (`user_id`),
-    UNIQUE INDEX `name` (`name` ASC) VISIBLE,
-    UNIQUE INDEX `email` (`email` ASC) VISIBLE
+    UNIQUE INDEX `name` (`name` ASC),
+    UNIQUE INDEX `email` (`email` ASC)
 )
     ENGINE = InnoDB
     AUTO_INCREMENT = 6
@@ -68,8 +68,8 @@ CREATE TABLE IF NOT EXISTS `online_charts_dev`.`user2graph_map`
     `graph_name`       VARCHAR(255) NOT NULL DEFAULT '新图形' COMMENT '图形名称',
     `created_time`     TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
     PRIMARY KEY (`created_graph_id`),
-    INDEX `user_id` (`user_id` ASC) VISIBLE,
-    INDEX `graph_type_id` (`graph_type_id` ASC) VISIBLE,
+    INDEX `user_id` (`user_id` ASC),
+    INDEX `graph_type_id` (`graph_type_id` ASC),
     CONSTRAINT `user2graph_map_ibfk_1`
         FOREIGN KEY (`user_id`)
             REFERENCES `online_charts_dev`.`user` (`user_id`)
@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS `online_charts_dev`.`bar_graph_category_conf_set`
     `label`            JSON         NULL     DEFAULT NULL,
     `color`            VARCHAR(7)   NOT NULL,
     PRIMARY KEY (`bar_series_id`),
-    INDEX `created_graph_id` (`created_graph_id` ASC) VISIBLE,
+    INDEX `created_graph_id` (`created_graph_id` ASC),
     CONSTRAINT `bar_graph_category_conf_set_ibfk_1`
         FOREIGN KEY (`created_graph_id`)
             REFERENCES `online_charts_dev`.`user2graph_map` (`created_graph_id`)
@@ -152,7 +152,7 @@ CREATE TABLE IF NOT EXISTS `online_charts_dev`.`bar_graph_category_data`
     `data_category` VARCHAR(255) NOT NULL COMMENT 'category',
     `data_value`    FLOAT        NOT NULL COMMENT 'value',
     `order`         INT(11)      NOT NULL COMMENT '第几个柱子',
-    INDEX `bar_series_id` (`bar_series_id` ASC) VISIBLE,
+    INDEX `bar_series_id` (`bar_series_id` ASC),
     PRIMARY KEY (`bar_series_id`, `order`),
     CONSTRAINT `bar_graph_category_data_ibfk_1`
         FOREIGN KEY (`bar_series_id`)
@@ -199,7 +199,7 @@ CREATE TABLE IF NOT EXISTS `online_charts_dev`.`line_graph_data`
     `data_x`           FLOAT   NOT NULL,
     `data_y`           FLOAT   NOT NULL,
     `order`            INT(11) NOT NULL COMMENT '一条线上的第几个数据',
-    INDEX `created_graph_id` (`created_graph_id` ASC) VISIBLE,
+    INDEX `created_graph_id` (`created_graph_id` ASC),
     CONSTRAINT `line_graph_data_ibfk_1`
         FOREIGN KEY (`created_graph_id`)
             REFERENCES `online_charts_dev`.`user2graph_map` (`created_graph_id`)
@@ -214,3 +214,10 @@ CREATE TABLE IF NOT EXISTS `online_charts_dev`.`line_graph_data`
 SET SQL_MODE = @OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS = @OLD_UNIQUE_CHECKS;
+# meta信息
+insert into graphs_meta (graph_type_id, name)
+values (1, 'line graph');                    
+insert into graphs_meta (graph_type_id, name)
+values (2, 'bar graph:category');            
+# TODO 创建默认用户，管理默认样式
+# TODO 第一行为默认样式配置
