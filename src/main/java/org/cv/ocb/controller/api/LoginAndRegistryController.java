@@ -1,22 +1,32 @@
 package org.cv.ocb.controller.api;
 
-import jakarta.servlet.http.HttpServletResponse;
-import org.cv.ocb.service.LogInService;
+import jakarta.servlet.http.HttpServletRequest;
+import org.cv.ocb.service.LogInAndRegisterService;
 import org.cv.ocb.vo.response.Result;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
 public class LoginAndRegistryController {
-    @Autowired
-    private LogInService logInService;
+    public LoginAndRegistryController(LogInAndRegisterService logInAndRegisterService) {
+        this.logInAndRegisterService = logInAndRegisterService;
+    }
 
-    @GetMapping("/login")
-    public Result login(@RequestBody Map<String, String> logInData) {
-        return logInService.logInVerify(logInData.get("userName"), logInData.get("password"));
+    private LogInAndRegisterService logInAndRegisterService;
 
+    @PostMapping("/login")
+    public Result login(HttpServletRequest req, @RequestBody Map<String, String> data) {
+        return logInAndRegisterService.logInVerify(data.get("userName"), data.get("password"));
+
+    }
+
+    @PostMapping("/register")
+    public Result register(HttpServletRequest req, @RequestBody Map<String, String> data) {
+        return logInAndRegisterService.register(data.get("userName"), data.get("password"));
     }
 }

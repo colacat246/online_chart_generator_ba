@@ -57,4 +57,13 @@ public class TestUserMapper {
             }
         }).forEach(log::info);
     }
+    @Test
+    @DisplayName("插入用户，返回自增主键")
+    public void test1() {
+        User newUser = new User();
+        newUser.setName("abc");
+        newUser.setPassword("123");
+        userMapper.insertUser(newUser);
+        Assertions.assertTrue(newUser.getUserId() > 5);
+    }
 }

@@ -1,0 +1,12 @@
+#/bin/bash
+
+test -e ca.key && rm ca.key
+test -e server.crt && rm server.crt
+test -e server.p12 && rm server.p12
+test -e site.csr && rm site.csr
+
+openssl genrsa -out ./ca.key
+openssl req -new -key ca.key -out site.csr -subj "//SKIP=skip/C=cn/ST=na/L=na/O=na/OU=na/CN=na"
+openssl x509 -req -days 365 -in site.csr -signkey ca.key -out server.crt
+openssl pkcs12 -export -clcerts -in server.crt -inkey ca.key -out server.p12
+

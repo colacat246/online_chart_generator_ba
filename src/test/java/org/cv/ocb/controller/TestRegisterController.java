@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import static org.hamcrest.Matchers.greaterThan;
 
 import java.util.HashMap;
 
@@ -20,61 +21,66 @@ import java.util.HashMap;
 @ActiveProfiles("test")
 @InjectSql
 @AutoConfigureMockMvc
-public class TestLogInController {
+public class TestRegisterController {
     @Autowired
     private MockMvc mockMvc;
+
     @Test
-    @DisplayName("正常登录")
+    @DisplayName("正常注册")
     public void test1() throws Exception {
 
         HashMap<String, String> userInfo = new HashMap<>();
-        userInfo.put("userName", "tom");
+        userInfo.put("userName", "new_user");
         userInfo.put("password", "556677");
-        MvcResult res = mockMvc.perform(MockMvcRequestBuilders.post("/api/login")
+        MvcResult res = mockMvc.perform(MockMvcRequestBuilders.post("/api/register")
                         .contentType("application/json")
                         .content(new ObjectMapper().writeValueAsString(userInfo)))
-                .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(999))
-                .andExpect(MockMvcResultMatchers.jsonPath("data.userId").value(2))
-                .andExpect(MockMvcResultMatchers.jsonPath("data.userName").value("tom"))
+                .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue" ).value(999))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.userId", greaterThan(5)))
+                .andExpect(MockMvcResultMatchers.jsonPath("data.userName").value("new_user"))
                 .andExpect(MockMvcResultMatchers.header().exists("x-user-auth-token"))
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
     }
+
     @Test
-    @DisplayName("用户名错误")
+    @DisplayName("用户名已占用")
     public void test2() throws Exception {
 
         HashMap<String, String> userInfo = new HashMap<>();
-        userInfo.put("userName", "tom2");
+        userInfo.put("userName", "peter");
         userInfo.put("password", "556677");
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/login")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/register")
                         .contentType("application/json")
                         .content(new ObjectMapper().writeValueAsString(userInfo)))
-                .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(1003));
+                .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(1005));
     }
+
     @Test
-    @DisplayName("密码错误")
+    @DisplayName("用户名为空")
     public void test3() throws Exception {
 
         HashMap<String, String> userInfo = new HashMap<>();
-        userInfo.put("userName", "tom");
+        userInfo.put("userName", "");
         userInfo.put("password", "5566778");
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/login")
-                        .contentType("application/json")
-                        .content(new ObjectMapper().writeValueAsString(userInfo)))
-                .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(1004));
-    }
-    @Test
-    @DisplayName("空字符")
-    public void test4() throws Exception {
-        HashMap<String, String> userInfo = new HashMap<>();
-        userInfo.put("userName", "tom");
-        userInfo.put("password", "");
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/login")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/register")
                         .contentType("application/json")
                         .content(new ObjectMapper().writeValueAsString(userInfo)))
                 .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(1000));
     }
+
+    @Test
+    @DisplayName("密码为空")
+    public void test4() throws Exception {
+        HashMap<String, String> userInfo = new HashMap<>();
+        userInfo.put("userName", "test_user");
+        userInfo.put("password", "");
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/register")
+                        .contentType("application/json")
+                        .content(new ObjectMapper().writeValueAsString(userInfo)))
+                .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(1000));
+    }
+
     @Test
     @DisplayName("请求参数错误")
     public void test5() throws Exception {

@@ -1,6 +1,7 @@
 package org.cv.ocb.vo.response;
 
 import lombok.Data;
+import org.cv.ocb.meta.StatusCode;
 
 @Data
 public class Result {

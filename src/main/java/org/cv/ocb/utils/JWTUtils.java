@@ -96,6 +96,8 @@ public class JWTUtils {
             log.info("jwt expired");
             // TODO 过期处理
             return null;
+        } catch (MalformedJwtException ex) {
+            return null;
         }
     }
 }

@@ -1,6 +1,6 @@
 package org.cv.ocb.conf;
 
-import org.cv.ocb.interceptor.LogInInterceptor;
+import org.cv.ocb.handler.LogInInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -14,11 +14,15 @@ public class MVCConf implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedOriginPatterns("http://127.0.0.1:*");
+        registry.addMapping("/**")
+                .allowCredentials(true)
+                .allowedMethods("POST", "GET")
+                .allowedOrigins("https://localhost:5173", "https://127.0.0.1:5173");
+//                .allowedOriginPatterns("https://localhost:*");
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(logInInterceptor).addPathPatterns("/api/**").excludePathPatterns("/api/login");
+        registry.addInterceptor(logInInterceptor).addPathPatterns("/api/**").excludePathPatterns("/api/login", "/api/register");
     }
 }

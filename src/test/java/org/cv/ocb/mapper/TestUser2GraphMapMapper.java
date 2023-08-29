@@ -28,7 +28,7 @@ public class TestUser2GraphMapMapper {
     @DisplayName("测试查询一个用户的图形")
     public void test1() throws JsonProcessingException {
         List<User2GraphMap> res = user2GraphMapMapper.getGraphsByUserId(2);
-        Assertions.assertEquals(2, res.size());
+        Assertions.assertEquals(3, res.size());
         log.info( objectMapper.writeValueAsString(res));
 
     }

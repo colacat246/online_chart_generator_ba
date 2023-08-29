@@ -15,10 +15,32 @@
 
 ## 接口文档
 
+### 注册
+
+请求地址：`/api/register`
+请求方法：post
+
+请求参数：
+
+| 字段       | 说明  | 类型     | 备注 | 是否必填 |
+|----------|-----|--------|----|------|
+| userName | 用户名 | String |    | 是    |
+| password | 密码  | String |    | 是    |
+
+返回参数：
+
+| 字段              | 说明              | 类型     | 备注                         | 是否必填                                                                  |
+|-----------------|-----------------|--------|----------------------------|-----------------------------------------------------------------------|
+| statusCode      | 接口状态码           | Number | 成功：999；空参数：1000； 验证失败：1001 | 是                                                                     |
+| message         | 接口信息            | String | 成功：'success' 失败：提示信息       | 是                                                                     |
+| userVo          | 用户数据，包括用户id和用户名 | Object | 是                          |                                                                       |
+| user-auth-token | JWT Token       | String | 是                          | 有用户ID userId: Number、用户名 userName: String、过期时间 exp: Number，cookie形式获取 |
+
+
 ### 登录
 
 请求地址：`/api/login`
-请求方法：get
+请求方法：post
 
 请求参数：
 
@@ -66,37 +88,42 @@ asideItem:
 | createdTime    | 创建时间  | String | yyyy-MM-dd HH:mm:ss:SSS | 是    |
 | graphTypeId    | 图形的种类 | Number | 这个种类设置在前端配置中            | 是    |
 
-### 折线图数据
+### 请求图数据
 
-请求地址：`/api/userGraph/{createdGraphId}`
+请求地址：`/api/userGraph/{graphTypeId}/{createdGraphId}`
 请求方法：get
 
 请求参数：
 
-| 字段             | 说明  | 类型     | 备注 | 是否必填 |
-|----------------|-----|--------|----|------|
-| createdGraphId | 图id | Number |    | 是    |
+| 字段             | 说明     | 类型     | 备注 | 是否必填 |
+|----------------|--------|--------|----|------|
+| graphTypeId    | 图类型的id | Number |    | 是    |
+| createdGraphId | 图id    | Number |    | 是    |
 
 返回参数：
 
-| 字段         | 说明    | 类型     | 备注                   | 是否必填 |
-|------------|-------|--------|----------------------|------|
-| statusCode | 接口状态码 | Number | 成功：200；失败：404        | 是    |
-| message    | 接口信息  | String | 成功：'success' 失败：提示信息 | 是    |
-| data       | 数据    | json   |                      |      |
-| field1     |       |        |                      |      |
-| field2     |       |        |                      |      |
+| 字段         | 说明    | 类型         | 备注                   | 是否必填 |
+|------------|-------|------------|----------------------|------|
+| statusCode | 接口状态码 | Number     | 成功：200；失败：404        | 是    |
+| message    | 接口信息  | String     | 成功：'success' 失败：提示信息 | 是    |
+| data       | 数据    | json |                      |      |
 
-data:
+data字段（根节点为列表）：
 
-| 字段   | 说明 | 类型     | 备注 | 是否必填 |
-|------|----|--------|----|------|
-| page | 页号 | Number |    | 是    |
-| size | 大小 | Number |    | 是    |
+| 字段         | 说明    | 类型         | 备注                   | 是否必填 |
+|------------|-------|------------|----------------------|------|
+|  | 接口状态码 | Number     | 成功：200；失败：404        | 是    |
+| message    | 接口信息  | String     | 成功：'success' 失败：提示信息 | 是    |
+| data       | 数据    | json |                      |      |
 
-## TODO
 
-* 使用validator[校验配置文件](https://blog.csdn.net/jianzhang11/article/details/108332727)，检查是否有jwt私钥
+### 新建图形
+
+### TODO 新建series
+
+### TODO 更改图形数据
+
+* 前端设置更新按钮，或轮询？
 
 ### template
 
@@ -131,6 +158,7 @@ data:
 
 定义折线图数据库，通过用户jwt，图形id获取图形，使用json储存图形配置，建立数据库模型
 
+* 注册用户名提前验证
 * 使用validator[校验配置文件](https://blog.csdn.net/jianzhang11/article/details/108332727)，检查是否有jwt私钥
 * 使用validator检查请求参数、请求体等数据，配合注解`@Validated` `@Notblank`等使用
 * 通过注解确定是否使用登录拦截器，拦截器中通过handler可以拿到方法，进而拿到注解
