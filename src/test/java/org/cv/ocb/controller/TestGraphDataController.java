@@ -1,5 +1,6 @@
 package org.cv.ocb.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.cv.ocb.mapper.UserMapper;
 import org.cv.ocb.pojo.User;
 import org.cv.ocb.utils.InjectSql;
@@ -14,9 +15,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -98,4 +101,22 @@ public class TestGraphDataController {
                 .andExpect(MockMvcResultMatchers.jsonPath("data").isNotEmpty());
 //                .andDo(MockMvcResultHandlers.print());
     }
+
+    @Test
+    @DisplayName("插入新图形")
+    public void test6() throws Exception {
+
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("graphTypeId", 1);
+        data.put("graphName", "新图形~~");
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/api/userGraph")
+                        .headers(httpHeaders)
+                        .contentType("application/json")
+                        .content(new ObjectMapper().writeValueAsString(data)))
+                .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(999))
+                .andExpect(MockMvcResultMatchers.jsonPath("data").isNotEmpty())
+                .andDo(MockMvcResultHandlers.print());
+    }
+
 }
