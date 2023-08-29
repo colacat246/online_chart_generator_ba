@@ -1,8 +1,6 @@
 package org.cv.ocb.controller;
 
-import jakarta.servlet.http.Cookie;
 import org.cv.ocb.mapper.UserMapper;
-import org.cv.ocb.meta.GraphMeta;
 import org.cv.ocb.pojo.User;
 import org.cv.ocb.utils.InjectSql;
 import org.cv.ocb.utils.JWTUtils;
@@ -15,9 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Arrays;
@@ -70,7 +66,7 @@ public class TestGraphDataController {
         Arrays.stream(new String[]{"1", "2"}).forEach(i -> {
             try {
                 mockMvc.perform(MockMvcRequestBuilders
-                                .get("/api/userGraph/2/" + i)
+                                .get("/api/userGraph/" + i)
                                 .headers(httpHeaders)
                         ).andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(999))
                         .andExpect(MockMvcResultMatchers.jsonPath("data").isNotEmpty())
@@ -86,7 +82,7 @@ public class TestGraphDataController {
     @DisplayName("获取具体图-找不到的情况")
     public void test4() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/api/userGraph/2/3")
+                        .get("/api/userGraph/100")
                         .headers(httpHeaders)
                 ).andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(1000))
                 .andExpect(MockMvcResultMatchers.jsonPath("data").isEmpty());
@@ -96,7 +92,7 @@ public class TestGraphDataController {
     @DisplayName("获取具体图-折线图")
     public void test5() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/api/userGraph/1/3")
+                        .get("/api/userGraph/3")
                         .headers(httpHeaders)
                 ).andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(999))
                 .andExpect(MockMvcResultMatchers.jsonPath("data").isNotEmpty());

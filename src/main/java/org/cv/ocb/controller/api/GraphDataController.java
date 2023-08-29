@@ -32,12 +32,11 @@ public class GraphDataController {
 
     /**
      * 根据用户token和具体图id获取图形
-     * @param graphTypeId
      * @param id
      * @return
      */
-    @GetMapping(value = "/userGraph/{graphTypeId}/{id}")
-    public Result getUserGraph(@PathVariable("graphTypeId") Integer graphTypeId, @PathVariable("id") Integer id) {
-        return userGraphService.getGraphById(graphTypeId, id);
+    @GetMapping(value = "/userGraph/{id}")
+    public Result getUserGraph(@PathVariable("id") Integer id) {
+        return userGraphService.getGraphById(id);
     }
 }

@@ -36,7 +36,6 @@
 | userVo          | 用户数据，包括用户id和用户名 | Object | 是                          |                                                                       |
 | user-auth-token | JWT Token       | String | 是                          | 有用户ID userId: Number、用户名 userName: String、过期时间 exp: Number，cookie形式获取 |
 
-
 ### 登录
 
 请求地址：`/api/login`
@@ -90,34 +89,57 @@ asideItem:
 
 ### 请求图数据
 
-请求地址：`/api/userGraph/{graphTypeId}/{createdGraphId}`
+请求地址：`/api/userGraph/{createdGraphId}`
 请求方法：get
 
 请求参数：
 
 | 字段             | 说明     | 类型     | 备注 | 是否必填 |
 |----------------|--------|--------|----|------|
-| graphTypeId    | 图类型的id | Number |    | 是    |
 | createdGraphId | 图id    | Number |    | 是    |
 
 返回参数：
 
-| 字段         | 说明    | 类型         | 备注                   | 是否必填 |
-|------------|-------|------------|----------------------|------|
-| statusCode | 接口状态码 | Number     | 成功：200；失败：404        | 是    |
-| message    | 接口信息  | String     | 成功：'success' 失败：提示信息 | 是    |
-| data       | 数据    | json |                      |      |
+| 字段         | 说明    | 类型     | 备注                   | 是否必填 |
+|------------|-------|--------|----------------------|------|
+| statusCode | 接口状态码 | Number | 成功：200；失败：404        | 是    |
+| message    | 接口信息  | String | 成功：'success' 失败：提示信息 | 是    |
+| data       | 数据    | json   |                      |      |
 
 data字段（根节点为列表）：
 
-| 字段         | 说明    | 类型         | 备注                   | 是否必填 |
-|------------|-------|------------|----------------------|------|
-|  | 接口状态码 | Number     | 成功：200；失败：404        | 是    |
-| message    | 接口信息  | String     | 成功：'success' 失败：提示信息 | 是    |
-| data       | 数据    | json |                      |      |
+| 字段      | 说明   | 类型     | 备注                   | 是否必填 |
+|---------|------|--------|----------------------|------|
+| message | 接口信息 | String | 成功：'success' 失败：提示信息 | 是    |
+| data    | 数据   | json   |                      |      |
 
+### TODO 新建图形
 
-### 新建图形
+* 从数据模板中加载数据
+
+请求地址：`/api/userGraph/{graphTypeId}`
+请求方法：post
+
+请求参数：
+
+| 字段          | 说明     | 类型     | 备注 | 是否必填 |
+|-------------|--------|--------|----|------|
+| graphTypeId | 图类型的id | Number |    | 是    |
+
+返回参数：
+
+| 字段         | 说明    | 类型     | 备注                   | 是否必填 |
+|------------|-------|--------|----------------------|------|
+| statusCode | 接口状态码 | Number | 成功：200；失败：404        | 是    |
+| message    | 接口信息  | String | 成功：'success' 失败：提示信息 | 是    |
+| data       | 数据    | json   |                      |      |
+
+data字段（根节点为列表）：
+
+| 字段             | 说明  | 类型     | 备注   | 是否必填 |
+|----------------|-----|--------|------|------|
+| createdGraphId | 图id | Number |      | 是    |
+| graphDataInit  | 数据  | json   | 模板数据 |      |
 
 ### TODO 新建series
 
