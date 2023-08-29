@@ -14,7 +14,12 @@ import org.cv.ocb.utils.StringUtils;
 import org.cv.ocb.utils.UserThreadLocal;
 import org.cv.ocb.vo.request.UserVo;
 import org.cv.ocb.vo.response.Result;
+import org.cv.ocb.vo.response.UserGraphListVo;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserGraphServiceImpl implements UserGraphService {
@@ -46,7 +51,15 @@ public class UserGraphServiceImpl implements UserGraphService {
             throw new RuntimeException(e);
         }
         user2GraphMapMapper.insertNewGraph(user2GraphMap);
-        return userGraphListService.getUserGraphListById(userVo.getUserId());
+        Integer newGraphId = user2GraphMap.getCreatedGraphId();
+
+        List<UserGraphListVo> userGraphListVos = userGraphListService.getUserGraphListVos(userVo.getUserId());
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("newGraphId", newGraphId);
+        map.put("graphList", userGraphListVos);
+
+        return Result.ok(map);
     }
 
     @Override
