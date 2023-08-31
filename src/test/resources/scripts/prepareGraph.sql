@@ -210,68 +210,14 @@ insert into graph_template (id, graph_type_id, data) values (2, 2, '
   "yAxis": {
     "type": "value"
   },
-  "series": [
-    {
-      "name": "语文",
-      "type": "bar",
-      "barWidth": "30px",
-      "label": {
-        "show": true,
-        "rotate": 30,
-        "position": "outside"
-      },
-      "color": {
-        "type": "linear",
-        "x": 0,
-        "y": 0,
-        "x2": 0,
-        "y2": 1,
-        "colorStops": [
-          {
-            "offset": 0,
-            "color": "gold"
-          },
-          {
-            "offset": 1,
-            "color": "red"
-          }
-        ]
-      }
-    },
-    {
-      "name": "数学",
-      "type": "bar",
-      "barWidth": "30px",
-      "label": {
-        "show": true,
-        "rotate": 30,
-        "position": "outside"
-      },
-      "color": {
-        "type": "radial",
-        "x": 0.5,
-        "y": 0.5,
-        "r": 1.5,
-        "colorStops": [
-          {
-            "offset": 0,
-            "color": "cyan"
-          },
-          {
-            "offset": 1,
-            "color": "green"
-          }
-        ]
-      }
-    }
-  ]
+  "series": []
 }
 ');
 
 insert into series_template (id, graph_type_id, data) values (1, 1, '
 {
   "$extra": {
-    "id": 0
+    "id": "123uuid"
   },
   "name": "新曲线",
   "data": [
@@ -294,14 +240,14 @@ insert into series_template (id, graph_type_id, data) values (2, 2, '
   "barWidth": "30px",
   "color": "#666666",
   "data": [
-    1.5,
-    5.8,
-    7.4,
-    10
+    1,
+    2,
+    3,
+    4
   ],
-  "name": "图1：第1组数据",
+  "name": "series",
   "$extra": {
-    "id": 1
+    "id": "1234uuid"
   },
   "label": {
     "show": true,
@@ -338,7 +284,7 @@ values (1, 2, 2, '柱状图1', '
       ],
       "name": "图1：第1组数据",
       "$extra": {
-        "id": 1
+        "id": "234uuid"
       },
       "label": {
         "show": true,
@@ -357,7 +303,7 @@ values (1, 2, 2, '柱状图1', '
       ],
       "name": "图1：第2组数据",
       "$extra": {
-        "id": 2
+        "id": "1uuid"
       },
       "label": {
         "show": true,
@@ -410,7 +356,7 @@ values (2, 2, 2, '柱状图2', '
       ],
       "name": "图2：第1组数据",
       "$extra": {
-        "id": 3
+        "id": "2uuid"
       },
       "label": {
         "show": true,
@@ -428,7 +374,7 @@ values (2, 2, 2, '柱状图2', '
       ],
       "name": "图2：第2组数据",
       "$extra": {
-        "id": 4
+        "id": "3uuid"
       },
       "label": {
         "show": true,
@@ -446,7 +392,7 @@ values (2, 2, 2, '柱状图2', '
       ],
       "name": "图2：第3组数据",
       "$extra": {
-        "id": 5
+        "id": "4uuid"
       },
       "label": {
         "show": true,

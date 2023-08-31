@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.UUID;
+
 @SpringBootTest
 @ActiveProfiles("test")
 public class ScatterTests {
@@ -21,6 +23,12 @@ public class ScatterTests {
         Assertions.assertTrue(StringUtils.hasEmpty("123", "abc", null));
         Assertions.assertFalse(StringUtils.hasEmpty("123", "abc", "123"));
         Assertions.assertTrue(StringUtils.hasEmpty("123", null, ""));
+    }
+    @Test
+    @DisplayName("生成uuid")
+    public void test2() {
+        UUID uuid = UUID.randomUUID();
+        System.out.println(uuid.toString());
     }
 
 }

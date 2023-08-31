@@ -3,9 +3,11 @@ package org.cv.ocb.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.cv.ocb.mapper.GraphTemplateMapper;
+import org.cv.ocb.mapper.SeriesTemplateMapper;
 import org.cv.ocb.mapper.User2GraphMapMapper;
 import org.cv.ocb.meta.StatusCode;
 import org.cv.ocb.pojo.GraphTemplate;
+import org.cv.ocb.pojo.SeriesTemplate;
 import org.cv.ocb.pojo.User2GraphMap;
 import org.cv.ocb.pojo.User2GraphMapForInsert;
 import org.cv.ocb.service.UserGraphListService;
@@ -16,21 +18,26 @@ import org.cv.ocb.vo.request.UserVo;
 import org.cv.ocb.vo.response.Result;
 import org.cv.ocb.vo.response.UserGraphListVo;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.ObjectError;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class UserGraphServiceImpl implements UserGraphService {
     private User2GraphMapMapper user2GraphMapMapper;
     private GraphTemplateMapper graphTemplateMapper;
     private UserGraphListService userGraphListService;
+    private SeriesTemplateMapper seriesTemplateMapper;
 
-    public UserGraphServiceImpl(User2GraphMapMapper user2GraphMapMapper, GraphTemplateMapper graphTemplateMapper, UserGraphListService userGraphListService) {
+    public UserGraphServiceImpl(User2GraphMapMapper user2GraphMapMapper, GraphTemplateMapper graphTemplateMapper, UserGraphListService userGraphListService, SeriesTemplateMapper seriesTemplateMapper) {
         this.user2GraphMapMapper = user2GraphMapMapper;
         this.graphTemplateMapper = graphTemplateMapper;
         this.userGraphListService = userGraphListService;
+        this.seriesTemplateMapper = seriesTemplateMapper;
     }
 
     @Override
@@ -63,10 +70,48 @@ public class UserGraphServiceImpl implements UserGraphService {
     }
 
     @Override
+    public Result deleteGraph(Integer id) {
+        UserVo userVo = UserThreadLocal.get();
+        // TODO 使用AOP增强此功能验证图是否属于用户
+        Integer userId = user2GraphMapMapper.getUserIdByGraphId(id);
+        if (userId != userVo.getUserId()) return Result.ex(StatusCode.REQUEST_PARAMETER_FAULT);
+
+        Integer row = user2GraphMapMapper.deleteGraph(id);
+        List<UserGraphListVo> userGraphListVos = userGraphListService.getUserGraphListVos(userId);
+        Integer curGraphId = null;
+        // 找到被删除图前一张图的ID
+        switch (userGraphListVos.size()) {
+            case 0:
+                break;
+            case 1:
+                curGraphId = userGraphListVos.get(0).getCreatedGraphId();
+                break;
+            default:
+                List<Integer> ids = userGraphListVos.stream().map(UserGraphListVo::getCreatedGraphId).toList();
+                for (int i = 0; i < ids.size() - 1; i++) {
+                    if (ids.get(i) > id) {
+                        curGraphId = ids.get(i);
+                        break;
+                    } else if (ids.get(i) < id && ids.get(i + 1) > id) {
+                        curGraphId = ids.get(i);
+                        break;
+                    } else {
+                        curGraphId = ids.get(i + 1);
+                    }
+                }
+                break;
+        }
+        Map<String, Object> data = new HashMap<>();
+        data.put("graphList", userGraphListVos);
+        data.put("curGraphId", curGraphId);
+        return Result.ok(data);
+    }
+
+    @Override
     public Result getGraphById(Integer id) {
         if (id == null) return Result.ex(StatusCode.REQUEST_PARAMETER_FAULT);
         UserVo userVo = UserThreadLocal.get();
-        // 验证图是否属于用户
+        // TODO 使用AOP增强此功能验证图是否属于用户
         Integer userId = user2GraphMapMapper.getUserIdByGraphId(id);
         if (userId != userVo.getUserId()) return Result.ex(StatusCode.REQUEST_PARAMETER_FAULT);
 
@@ -74,6 +119,30 @@ public class UserGraphServiceImpl implements UserGraphService {
         if (graphData == null) return Result.ex(StatusCode.REQUEST_PARAMETER_FAULT);
 
         return Result.ok(graphData.getData());
+    }
+
+    @Override
+    public Result insertNewSeries(Integer createdGraphId, String seriesName) {
+        if (createdGraphId == null || StringUtils.isEmpty(seriesName))
+            return Result.ex(StatusCode.REQUEST_PARAMETER_FAULT);
+        UserVo userVo = UserThreadLocal.get();
+        // TODO 使用AOP增强此功能验证图是否属于用户
+        User2GraphMap graph = user2GraphMapMapper.getGraphByGraphId(createdGraphId);
+        Integer userId = graph.getUserId();
+        if (userId != userVo.getUserId()) return Result.ex(StatusCode.REQUEST_PARAMETER_FAULT);
+
+        // 获取series模板
+        Integer graphTypeId = graph.getGraphTypeId();
+        String uuid = UUID.randomUUID().toString();
+        String templateData = seriesTemplateMapper.getTemplateDataAndSetName(graphTypeId, seriesName, uuid);
+        // 添加到graph
+        Integer row = user2GraphMapMapper.addNewSeries(createdGraphId, templateData);
+        // 拿到更新后的图形
+        User2GraphMap updatedGraph = user2GraphMapMapper.getGraphByGraphId(createdGraphId);
+        Map<String, Object> data = new HashMap<>();
+        data.put("graph", updatedGraph.getData());
+        data.put("newSeriesId", uuid);
+        return Result.ok(data);
     }
 
 

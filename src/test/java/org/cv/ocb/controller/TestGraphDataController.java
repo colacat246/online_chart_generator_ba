@@ -20,6 +20,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
+
+import static org.hamcrest.Matchers.hasSize;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -37,12 +40,17 @@ public class TestGraphDataController {
     private UserMapper userMapper;
     private JWTUtils jwtUtils;
     private HttpHeaders httpHeaders = new HttpHeaders();
+    private HttpHeaders httpHeadersNotTom = new HttpHeaders();
 
     @BeforeEach
     public void beforeEach() {
         User user = userMapper.getUserByName("tom");
         String token = jwtUtils.genToken(user);
         httpHeaders.add("x-user-auth-token", token);
+
+        User user2 = userMapper.getUserByName("testUser");
+        String token2 = jwtUtils.genToken(user2);
+        httpHeadersNotTom.add("x-user-auth-token", token2);
     }
 
     @Test
@@ -92,6 +100,16 @@ public class TestGraphDataController {
     }
 
     @Test
+    @DisplayName("获取具体图-图和用户不匹配")
+    public void test4_1() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/userGraph/1")
+                        .headers(httpHeadersNotTom)
+                ).andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(1000))
+                .andExpect(MockMvcResultMatchers.jsonPath("data").isEmpty());
+    }
+
+    @Test
     @DisplayName("获取具体图-折线图")
     public void test5() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
@@ -115,8 +133,70 @@ public class TestGraphDataController {
                         .contentType("application/json")
                         .content(new ObjectMapper().writeValueAsString(data)))
                 .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(999))
-                .andExpect(MockMvcResultMatchers.jsonPath("data").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("data").isNotEmpty());
+//                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    @DisplayName("插入新曲线")
+    public void test7() throws Exception {
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("createdGraphId", 1);
+        data.put("seriesName", "新柱状系列~~");
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/api/userGraphSeries")
+                        .headers(httpHeaders)
+                        .contentType("application/json")
+                        .content(new ObjectMapper().writeValueAsString(data)))
+                .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(999))
+                .andExpect(MockMvcResultMatchers.jsonPath("data.graph.series").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("data.graph.series.length()").value(3))
+                .andExpect(MockMvcResultMatchers.jsonPath("data.graph.series[2].$extra.id").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("data.newSeriesId").isString())
                 .andDo(MockMvcResultHandlers.print());
     }
 
+    @Test
+    @DisplayName("插入新曲线-图形和用户不匹配")
+    public void test8() throws Exception {
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("createdGraphId", 1);
+        data.put("seriesName", "新柱状系列~~");
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/api/userGraphSeries")
+                        .headers(httpHeadersNotTom)
+                        .contentType("application/json")
+                        .content(new ObjectMapper().writeValueAsString(data)))
+                .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(1000))
+                .andExpect(MockMvcResultMatchers.jsonPath("data").isEmpty());
+    }
+
+    @Test
+    @DisplayName("删除图形-正常")
+    public void test9() throws Exception {
+        Map<String, Object> data = Map.of("createdGraphId", 1);
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/api/userGraph")
+                        .headers(httpHeaders)
+                        .contentType("application/json")
+                        .content(new ObjectMapper().writeValueAsString(data)))
+                .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(999))
+                .andExpect(MockMvcResultMatchers.jsonPath("data.graphList.length()").value(2))
+                .andExpect(MockMvcResultMatchers.jsonPath("data.curGraphId").value(2))
+                .andExpect(MockMvcResultMatchers.jsonPath("data.graphList[0].graphName").value("柱状图2"))
+                .andExpect(MockMvcResultMatchers.jsonPath("data.graphList[1].graphName").value("折线图1"));
+    }
+
+    @Test
+    @DisplayName("删除图形-用户名和图形不匹配")
+    public void test10() throws Exception {
+        Map<String, Object> data = Map.of("createdGraphId", 1);
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/api/userGraph")
+                        .headers(httpHeadersNotTom)
+                        .contentType("application/json")
+                        .content(new ObjectMapper().writeValueAsString(data)))
+                .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(1000))
+                .andExpect(MockMvcResultMatchers.jsonPath("data").isEmpty());
+    }
 }

@@ -16,7 +16,7 @@ public class MVCConf implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowCredentials(true)
-                .allowedMethods("POST", "GET")
+                .allowedMethods("POST", "GET", "DELETE")
                 .allowedOrigins("https://localhost:5173", "https://127.0.0.1:5173");
 //                .allowedOriginPatterns("https://localhost:*");
     }

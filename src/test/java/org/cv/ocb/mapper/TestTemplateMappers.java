@@ -35,4 +35,10 @@ public class TestTemplateMappers {
         SeriesTemplate seriesTemplate = seriesTemplateMapper.getTemplateByGraphTypeId(1);
         Assertions.assertNotNull(seriesTemplate);
     }
+    @Test
+    @DisplayName("测试获取新series模板")
+    public void test2() {
+        String res = seriesTemplateMapper.getTemplateDataAndSetName(2, "新名称2", "123uuid");
+        System.out.println(res);
+    }
 }
