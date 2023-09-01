@@ -199,4 +199,80 @@ public class TestGraphDataController {
                 .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(1000))
                 .andExpect(MockMvcResultMatchers.jsonPath("data").isEmpty());
     }
+    @Test
+    @DisplayName("删除series-正常-删除第一个")
+    public void test11() throws Exception {
+        Map<String, Object> data = Map.of("createdGraphId", 1, "seriesId", "3c5c60a2-9ace-41f8-8bd1-c9e74c7d785a");
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/api/userGraphSeries")
+                        .headers(httpHeaders)
+                        .contentType("application/json")
+                        .content(new ObjectMapper().writeValueAsString(data)))
+                .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(999))
+                .andExpect(MockMvcResultMatchers.jsonPath("data.graph").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("data.graph.series.length()").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("data.seriesId").isEmpty());
+    }
+    @Test
+    @DisplayName("删除series-正常-删除第二个")
+    public void test12() throws Exception {
+        Map<String, Object> data = Map.of("createdGraphId", 1, "seriesId", "5a0bd736-80bd-4f08-b436-c7fcdee7c0fe");
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/api/userGraphSeries")
+                        .headers(httpHeaders)
+                        .contentType("application/json")
+                        .content(new ObjectMapper().writeValueAsString(data)))
+                .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(999))
+                .andExpect(MockMvcResultMatchers.jsonPath("data.graph").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("data.graph.series.length()").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("data.seriesId").value("3c5c60a2-9ace-41f8-8bd1-c9e74c7d785a"));
+    }
+    @Test
+    @DisplayName("删除series-用户图形不匹配")
+    public void test13() throws Exception {
+        Map<String, Object> data = Map.of("createdGraphId", 1, "seriesId", "5a0bd736-80bd-4f08-b436-c7fcdee7c0fe");
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/api/userGraphSeries")
+                        .headers(httpHeadersNotTom)
+                        .contentType("application/json")
+                        .content(new ObjectMapper().writeValueAsString(data)))
+                .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(1000));
+
+    }
+    @Test
+    @DisplayName("删除series-图形和seriesId不匹配")
+    public void test14() throws Exception {
+        Map<String, Object> data = Map.of("createdGraphId", 2, "seriesId", "5a0bd736-80bd-4f08-b436-c7fcdee7c0fe");
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/api/userGraphSeries")
+                        .headers(httpHeaders)
+                        .contentType("application/json")
+                        .content(new ObjectMapper().writeValueAsString(data)))
+                .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(1000));
+
+    }
+    @Test
+    @DisplayName("删除series-seriesId找不到")
+    public void test15() throws Exception {
+        Map<String, Object> data = Map.of("createdGraphId", 1, "seriesId", "5a0bd736-80bd-4f08-b436-c7fcdee7c0fe___12345");
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/api/userGraphSeries")
+                        .headers(httpHeaders)
+                        .contentType("application/json")
+                        .content(new ObjectMapper().writeValueAsString(data)))
+                .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(1000));
+
+    }
+    @Test
+    @DisplayName("删除series-图形找不到")
+    public void test16() throws Exception {
+        Map<String, Object> data = Map.of("createdGraphId", 100, "seriesId", "5a0bd736-80bd-4f08-b436-c7fcdee7c0fe");
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/api/userGraphSeries")
+                        .headers(httpHeaders)
+                        .contentType("application/json")
+                        .content(new ObjectMapper().writeValueAsString(data)))
+                .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(1000));
+
+    }
 }

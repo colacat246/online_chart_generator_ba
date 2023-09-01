@@ -217,7 +217,7 @@ insert into graph_template (id, graph_type_id, data) values (2, 2, '
 insert into series_template (id, graph_type_id, data) values (1, 1, '
 {
   "$extra": {
-    "id": "123uuid"
+    "id": ""
   },
   "name": "新曲线",
   "data": [
@@ -247,7 +247,7 @@ insert into series_template (id, graph_type_id, data) values (2, 2, '
   ],
   "name": "series",
   "$extra": {
-    "id": "1234uuid"
+    "id": ""
   },
   "label": {
     "show": true,
@@ -284,7 +284,7 @@ values (1, 2, 2, '柱状图1', '
       ],
       "name": "图1：第1组数据",
       "$extra": {
-        "id": "234uuid"
+        "id": "3c5c60a2-9ace-41f8-8bd1-c9e74c7d785a"
       },
       "label": {
         "show": true,
@@ -303,7 +303,7 @@ values (1, 2, 2, '柱状图1', '
       ],
       "name": "图1：第2组数据",
       "$extra": {
-        "id": "1uuid"
+        "id": "5a0bd736-80bd-4f08-b436-c7fcdee7c0fe"
       },
       "label": {
         "show": true,
@@ -313,7 +313,6 @@ values (1, 2, 2, '柱状图1', '
     }
   ],
   "$extra": {
-    "id": 1,
     "graphTypeId": 2,
     "divHeight": 1000,
     "w2hRatio": 1.33
@@ -356,7 +355,7 @@ values (2, 2, 2, '柱状图2', '
       ],
       "name": "图2：第1组数据",
       "$extra": {
-        "id": "2uuid"
+        "id": "a17bcd37-9179-4a7e-9e43-c15a2972771f"
       },
       "label": {
         "show": true,
@@ -374,7 +373,7 @@ values (2, 2, 2, '柱状图2', '
       ],
       "name": "图2：第2组数据",
       "$extra": {
-        "id": "3uuid"
+        "id": "3bfcae00-6a32-4b6b-b3e0-1bfcdfbc105e"
       },
       "label": {
         "show": true,
@@ -392,7 +391,7 @@ values (2, 2, 2, '柱状图2', '
       ],
       "name": "图2：第3组数据",
       "$extra": {
-        "id": "4uuid"
+        "id": "94486b75-5e3e-486b-b3ce-4e42f712e3d0"
       },
       "label": {
         "show": true,
@@ -402,7 +401,6 @@ values (2, 2, 2, '柱状图2', '
     }
   ],
   "$extra": {
-    "id": 2,
     "graphTypeId": 2,
     "divHeight": 500,
     "w2hRatio": 1.33
@@ -424,7 +422,6 @@ values (2, 2, 2, '柱状图2', '
 insert into user2graph_map (created_graph_id, user_id, graph_type_id, graph_name, data)
 values (3, 2, 1, '折线图1', '{
   "$extra": {
-    "id": "fbb02f03-6657-4040-972e-9d4443eae9cc",
     "graphTypeId": 1,
     "divHeight": 800,
     "w2hRatio": 1.33
@@ -458,7 +455,7 @@ values (3, 2, 1, '折线图1', '{
   "series": [
     {
       "$extra": {
-        "id": "11"
+        "id": "ff0eebbf-2748-42df-b17d-98a51bca6db4"
       },
       "name": "line 1~~~",
       "type": "line",
@@ -490,7 +487,7 @@ values (3, 2, 1, '折线图1', '{
     },
     {
       "$extra": {
-        "id": "12"
+        "id": "312f4427-27ea-4b4a-b921-753d3ba0d588"
       },
       "name": "myLine 2",
       "type": "line",

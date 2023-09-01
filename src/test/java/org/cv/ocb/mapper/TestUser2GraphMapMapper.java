@@ -15,6 +15,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -36,6 +39,7 @@ public class TestUser2GraphMapMapper {
         Assertions.assertEquals(3, res.size());
         log.info(objectMapper.writeValueAsString(res));
     }
+
     @Test
     @DisplayName("测试查询一个用户的图形-空")
     public void test1_1() throws JsonProcessingException {
@@ -84,5 +88,33 @@ public class TestUser2GraphMapMapper {
         graphs.forEach(i -> {
             System.out.println(i.getGraphName());
         });
+    }
+
+    @Test
+    @DisplayName("按照seriesId找到json_path")
+    public void test5() {
+        String jsonPath = user2GraphMapMapper.getSeriesJsonPathById(1, "5a0bd736-80bd-4f08-b436-c7fcdee7c0fe");
+        Assertions.assertEquals("$.series[1].$extra.id", jsonPath);
+        System.out.println(jsonPath);
+        Pattern p = Pattern.compile("(?<=series\\[)\\d+(?=\\])");
+
+        Matcher matcher = p.matcher(jsonPath);
+        matcher.find();
+        Assertions.assertEquals("1", matcher.group(0));
+    }
+
+    @Test
+    @DisplayName("删除series")
+    public void test6() throws JsonProcessingException {
+        Integer row = user2GraphMapMapper.deleteSeriesByIndex(1, "1");
+        List series = (List) user2GraphMapMapper.getGraphByGraphId(1).getData().get("series");
+        Assertions.assertEquals(1, series.size());
+    }
+    @Test
+    @DisplayName("根据idx得到seriesId")
+    public void test7() throws JsonProcessingException {
+        String id = user2GraphMapMapper.getSeriesIdByIndex(1, "0");
+        Assertions.assertEquals("3c5c60a2-9ace-41f8-8bd1-c9e74c7d785a", id);
+        System.out.println(id);
     }
 }

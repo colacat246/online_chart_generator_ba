@@ -55,4 +55,10 @@ public class GraphDataController {
     public Result postNewSeries(@RequestBody Map<String, Object> data) {
         return userGraphService.insertNewSeries((Integer) data.get("createdGraphId"), (String)data.get("seriesName"));
     }
+
+    @DeleteMapping(value = "/userGraphSeries")
+    public Result deleteSeriesById(@RequestBody Map<String, Object> data) {
+        return userGraphService.deleteSeriesById((Integer) data.get("createdGraphId"), (String)data.get("seriesId"));
+
+    }
 }

@@ -24,11 +24,15 @@ public class ScatterTests {
         Assertions.assertFalse(StringUtils.hasEmpty("123", "abc", "123"));
         Assertions.assertTrue(StringUtils.hasEmpty("123", null, ""));
     }
+
     @Test
     @DisplayName("生成uuid")
     public void test2() {
-        UUID uuid = UUID.randomUUID();
-        System.out.println(uuid.toString());
+        for (int i = 0; i < 10; i++) {
+            UUID uuid = UUID.randomUUID();
+            System.out.println(uuid.toString());
+
+        }
     }
 
 }

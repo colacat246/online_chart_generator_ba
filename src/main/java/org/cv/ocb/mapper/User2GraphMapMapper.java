@@ -37,4 +37,13 @@ public interface User2GraphMapMapper {
     @Update("update user2graph_map set `data` = json_array_append(`data`, '$.series', cast(#{data} as json)) where created_graph_id = #{id};")
     Integer addNewSeries(@Param("id") Integer createdGraphId, @Param("data") String seriesData);
 
+    @Select("select json_unquote(json_search(`data`, 'one', #{series_id})) from user2graph_map where created_graph_id = #{graph_id}")
+    String getSeriesJsonPathById(@Param("graph_id") Integer graphId, @Param("series_id") String seriesId);
+
+    // 根据series在列表中的index删除series
+    @Update("update user2graph_map set `data` = json_remove(`data`, '$.series[${series_idx}]') where created_graph_id = #{graph_id}")
+    Integer deleteSeriesByIndex(@Param("graph_id") Integer graphId, @Param("series_idx") String seriesIdx);
+
+    @Select("select json_unquote(`data` -> '$.series[${series_idx}].$extra.id') from user2graph_map where created_graph_id = #{graph_id}")
+    String getSeriesIdByIndex(@Param("graph_id") Integer graphId, @Param("series_idx") String seriesIdx);
 }

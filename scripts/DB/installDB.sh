@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 test -e createDB_modified.sql && rm createDB_modified.sql
 

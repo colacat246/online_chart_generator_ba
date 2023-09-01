@@ -7,4 +7,6 @@ public interface UserGraphService {
     Result insertNewGraph(Integer graphTypeId, String graphName);
     Result deleteGraph(Integer createdGraphId);
     Result insertNewSeries(Integer createdGraphId, String seriesName);
+
+    Result deleteSeriesById(Integer createdGraphId, String seriesId);
 }

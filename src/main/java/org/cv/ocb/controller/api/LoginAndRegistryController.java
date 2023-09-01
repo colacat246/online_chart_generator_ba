@@ -20,13 +20,13 @@ public class LoginAndRegistryController {
     private LogInAndRegisterService logInAndRegisterService;
 
     @PostMapping("/login")
-    public Result login(HttpServletRequest req, @RequestBody Map<String, String> data) {
+    public Result login(@RequestBody Map<String, String> data) {
         return logInAndRegisterService.logInVerify(data.get("userName"), data.get("password"));
 
     }
 
     @PostMapping("/register")
-    public Result register(HttpServletRequest req, @RequestBody Map<String, String> data) {
+    public Result register(@RequestBody Map<String, String> data) {
         return logInAndRegisterService.register(data.get("userName"), data.get("password"));
     }
 }

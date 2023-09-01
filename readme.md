@@ -85,7 +85,7 @@ asideItem:
 | createdGraphId | 序号    | Number |                         | 是    |
 | graphName      | 图形名称  | String |                         | 是    |
 | createdTime    | 创建时间  | String | yyyy-MM-dd HH:mm:ss:SSS | 是    |
-| graphTypeId    | 图形的种类 | Number | 这个种类设置在前端配置中            | 是    |
+| graphTypeId    | 图形的种类 | Number |                         | 是    |
 
 ### 请求图数据
 
@@ -124,7 +124,7 @@ asideItem:
 |------------|-------|--------|----------------------|------|
 | statusCode | 接口状态码 | Number | 成功：200；失败：404        | 是    |
 | message    | 接口信息  | String | 成功：'success' 失败：提示信息 | 是    |
-| data       | 数据    | json   | 返回graphList          |      |
+| data       | 数据    | json   |                      |      |
 
 data字段：
 
@@ -151,16 +151,16 @@ data字段：
 |------------|-------|--------|----------------------|------|
 | statusCode | 接口状态码 | Number | 成功：200；失败：404        | 是    |
 | message    | 接口信息  | String | 成功：'success' 失败：提示信息 | 是    |
-| data       | 新数据   | json   | 返回graphList          |      |
+| data       | 新数据   | json   |                      |      |
 
 data字段：
 
-| 字段          | 说明      | 类型      | 备注 | 是否必填 |
-|-------------|---------|---------|----|------|
-| graph       | 更新后的图数据 | json    |    | 是    |
-| newSeriesId | 新曲线的Id  | Integer |    |      |
+| 字段          | 说明      | 类型     | 备注 | 是否必填 |
+|-------------|---------|--------|----|------|
+| graph       | 更新后的图数据 | json   |    | 是    |
+| newSeriesId | 新曲线的Id  | String |    |      |
 
-### TODO 删除图形
+### 删除图形
 
 请求地址：`/api/userGraph/`
 请求方法：delete
@@ -190,7 +190,34 @@ data字段：
 
 * 前端设置更新按钮，或轮询？
 
-### TODO 删除曲线
+### 删除曲线
+
+请求地址：`/api/userGraphSeries/`
+请求方法：delete
+
+请求参数：
+
+| 字段             | 说明     | 类型     | 备注 | 是否必填 |
+|----------------|--------|--------|----|------|
+| createdGraphId | 图类型的id | Number |    | 是    |
+| seriesId       | 图类型的id | Number |    | 是    |
+
+返回参数：
+
+| 字段         | 说明    | 类型     | 备注                   | 是否必填 |
+|------------|-------|--------|----------------------|------|
+| statusCode | 接口状态码 | Number | 成功：200；失败：404        | 是    |
+| message    | 接口信息  | String | 成功：'success' 失败：提示信息 | 是    |
+| data       | 数据    | json   |                      |      |
+
+data字段：
+
+data字段：
+
+| 字段       | 说明            | 类型     | 备注         | 是否必填 |
+|----------|---------------|--------|------------|------|
+| graph    | 更新后的图数据       | json   |            | 是    |
+| seriesId | 所删除曲线前一条曲线的Id | String | 没有前一条曲线返回空 |      |
 
 ### TODO 更新曲线
 
