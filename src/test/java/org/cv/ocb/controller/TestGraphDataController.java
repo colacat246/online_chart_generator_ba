@@ -1,6 +1,7 @@
 package org.cv.ocb.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.ibatis.ognl.ObjectElementsAccessor;
 import org.cv.ocb.mapper.UserMapper;
 import org.cv.ocb.pojo.User;
 import org.cv.ocb.utils.InjectSql;
@@ -199,6 +200,7 @@ public class TestGraphDataController {
                 .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(1000))
                 .andExpect(MockMvcResultMatchers.jsonPath("data").isEmpty());
     }
+
     @Test
     @DisplayName("删除series-正常-删除第一个")
     public void test11() throws Exception {
@@ -213,6 +215,7 @@ public class TestGraphDataController {
                 .andExpect(MockMvcResultMatchers.jsonPath("data.graph.series.length()").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("data.seriesId").isEmpty());
     }
+
     @Test
     @DisplayName("删除series-正常-删除第二个")
     public void test12() throws Exception {
@@ -227,6 +230,7 @@ public class TestGraphDataController {
                 .andExpect(MockMvcResultMatchers.jsonPath("data.graph.series.length()").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("data.seriesId").value("3c5c60a2-9ace-41f8-8bd1-c9e74c7d785a"));
     }
+
     @Test
     @DisplayName("删除series-用户图形不匹配")
     public void test13() throws Exception {
@@ -239,6 +243,7 @@ public class TestGraphDataController {
                 .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(1000));
 
     }
+
     @Test
     @DisplayName("删除series-图形和seriesId不匹配")
     public void test14() throws Exception {
@@ -251,6 +256,7 @@ public class TestGraphDataController {
                 .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(1000));
 
     }
+
     @Test
     @DisplayName("删除series-seriesId找不到")
     public void test15() throws Exception {
@@ -263,6 +269,7 @@ public class TestGraphDataController {
                 .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(1000));
 
     }
+
     @Test
     @DisplayName("删除series-图形找不到")
     public void test16() throws Exception {
@@ -274,5 +281,49 @@ public class TestGraphDataController {
                         .content(new ObjectMapper().writeValueAsString(data)))
                 .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(1000));
 
+    }
+
+    @Test
+    @DisplayName("更新graph")
+    public void test17() throws Exception {
+        Map<String, Object> data = Map.of("createdGraphId", 1, "data", new HashMap<String, Object>() {{
+            put("k1", "v1");
+        }});
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/api/userGraph")
+                        .headers(httpHeaders)
+                        .contentType("application/json")
+                        .content(new ObjectMapper().writeValueAsString(data)))
+                .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(999))
+                .andExpect(MockMvcResultMatchers.jsonPath("data.isUpdated").value(true));
+    }
+
+    @Test
+    @DisplayName("更新graph-用户图形不匹配")
+    public void test18() throws Exception {
+        Map<String, Object> data = Map.of("createdGraphId", 1, "data", new HashMap<String, Object>() {{
+            put("k1", "v1");
+        }});
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/api/userGraph")
+                        .headers(httpHeadersNotTom)
+                        .contentType("application/json")
+                        .content(new ObjectMapper().writeValueAsString(data)))
+                .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(1000));
+    }
+
+    @Test
+    @DisplayName("更新graph-数据为空")
+    public void test19() throws Exception {
+        Map<String, Object> data = new HashMap<>() {{
+            put("createdGraphId", 1);
+            put("data", null);
+        }};
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/api/userGraph")
+                        .headers(httpHeaders)
+                        .contentType("application/json")
+                        .content(new ObjectMapper().writeValueAsString(data)))
+                .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(1000));
     }
 }

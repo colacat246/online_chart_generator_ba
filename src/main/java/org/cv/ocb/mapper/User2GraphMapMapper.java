@@ -30,6 +30,9 @@ public interface User2GraphMapMapper {
     @Options(useGeneratedKeys = true, keyProperty = "createdGraphId", keyColumn = "created_graph_id")
     void insertNewGraph(User2GraphMapForInsert user2GraphMap);
 
+    @Update("update user2graph_map set `data` = #{data} where created_graph_id = #{id}")
+    Integer updateGraph(@Param("id") Integer createdGraphId, @Param("data") String data);
+
     @Delete("delete from user2graph_map where created_graph_id = #{id}")
     Integer deleteGraph(@Param("id") Integer createdGraphId);
 

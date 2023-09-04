@@ -16,6 +16,7 @@ import org.cv.ocb.utils.UserThreadLocal;
 import org.cv.ocb.vo.request.UserVo;
 import org.cv.ocb.vo.response.Result;
 import org.cv.ocb.vo.response.UserGraphListVo;
+import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -31,12 +32,14 @@ public class UserGraphServiceImpl implements UserGraphService {
     private GraphTemplateMapper graphTemplateMapper;
     private UserGraphListService userGraphListService;
     private SeriesTemplateMapper seriesTemplateMapper;
+    private ObjectMapper objectMapper;
 
-    public UserGraphServiceImpl(User2GraphMapMapper user2GraphMapMapper, GraphTemplateMapper graphTemplateMapper, UserGraphListService userGraphListService, SeriesTemplateMapper seriesTemplateMapper) {
+    public UserGraphServiceImpl(User2GraphMapMapper user2GraphMapMapper, GraphTemplateMapper graphTemplateMapper, UserGraphListService userGraphListService, SeriesTemplateMapper seriesTemplateMapper, ObjectMapper objectMapper) {
         this.user2GraphMapMapper = user2GraphMapMapper;
         this.graphTemplateMapper = graphTemplateMapper;
         this.userGraphListService = userGraphListService;
         this.seriesTemplateMapper = seriesTemplateMapper;
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -187,6 +190,28 @@ public class UserGraphServiceImpl implements UserGraphService {
         data.put("graph", updatedGraph.getData());
         data.put("seriesId", seriesIdPrevious);
         return Result.ok(data);
+    }
+
+    @Override
+    public Result updateGraph(Integer createdGraphId, Map<String, Object> data) {
+        if (createdGraphId == null || data == null)
+            return Result.ex(StatusCode.REQUEST_PARAMETER_FAULT);
+        UserVo userVo = UserThreadLocal.get();
+        // TODO 使用AOP增强此功能验证图是否属于用户
+        User2GraphMap graph = user2GraphMapMapper.getGraphByGraphId(createdGraphId);
+        if (graph == null || userVo.getUserId() != graph.getUserId())
+            return Result.ex(StatusCode.REQUEST_PARAMETER_FAULT);
+        try {
+            String dataString = objectMapper.writeValueAsString(data);
+            Integer row = user2GraphMapMapper.updateGraph(createdGraphId, dataString);
+            HashMap<String, Object> retData = new HashMap<>() {{
+                put("isUpdated", true);
+            }};
+            return Result.ok(retData);
+        } catch (JsonProcessingException e) {
+            return Result.ex(StatusCode.REQUEST_PARAMETER_FAULT);
+        }
+
     }
 
 

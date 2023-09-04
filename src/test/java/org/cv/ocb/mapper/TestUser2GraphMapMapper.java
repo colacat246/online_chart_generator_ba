@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -110,11 +111,25 @@ public class TestUser2GraphMapMapper {
         List series = (List) user2GraphMapMapper.getGraphByGraphId(1).getData().get("series");
         Assertions.assertEquals(1, series.size());
     }
+
     @Test
     @DisplayName("根据idx得到seriesId")
-    public void test7() throws JsonProcessingException {
+    public void test7() {
         String id = user2GraphMapMapper.getSeriesIdByIndex(1, "0");
         Assertions.assertEquals("3c5c60a2-9ace-41f8-8bd1-c9e74c7d785a", id);
         System.out.println(id);
+    }
+
+    @Test
+    @DisplayName("更新graph")
+    public void test8() throws JsonProcessingException {
+        user2GraphMapMapper.updateGraph(1, new ObjectMapper().writeValueAsString(new HashMap() {
+            {
+                put("k1", "v1");
+            }
+        }));
+        Map<String, Object> data = user2GraphMapMapper.getGraphByGraphId(1).getData();
+        String s = new ObjectMapper().writeValueAsString(data);
+        Assertions.assertEquals("{\"k1\":\"v1\"}", s);
     }
 }

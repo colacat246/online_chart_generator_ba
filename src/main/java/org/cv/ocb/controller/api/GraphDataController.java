@@ -1,8 +1,11 @@
 package org.cv.ocb.controller.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.cv.ocb.service.UserGraphListService;
 import org.cv.ocb.service.UserGraphService;
 import org.cv.ocb.utils.UserThreadLocal;
+import org.cv.ocb.vo.request.GraphVo;
 import org.cv.ocb.vo.request.UserVo;
 import org.cv.ocb.vo.response.Result;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +48,12 @@ public class GraphDataController {
     @PostMapping(value = "/userGraph")
     public Result postNewGraph(@RequestBody Map<String, Object> data) {
         return userGraphService.insertNewGraph((Integer) data.get("graphTypeId"), (String)data.get("graphName"));
+    }
+
+    @PutMapping(value = "/userGraph")
+    public Result updateGraph(@RequestBody GraphVo graphVo) {
+        System.out.println("auto saved!!!");
+        return userGraphService.updateGraph(graphVo.getCreatedGraphId(), graphVo.getData());
     }
     @DeleteMapping(value = "/userGraph")
     public Result deleteGraph(@RequestBody Map<String, Object> data) {

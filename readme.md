@@ -188,7 +188,23 @@ data字段：
 
 ### TODO 更新图形
 
-* 前端设置更新按钮，或轮询？
+请求地址：`/api/userGraph/`
+请求方法：put
+
+请求参数：
+
+| 字段             | 说明      | 类型     | 备注 | 是否必填 |
+|----------------|---------|--------|----|------|
+| createdGraphId | 图类型的id  | Number |    | 是    |
+| data           | 更新的图形数据 | Json   |    | 是    |
+
+返回参数：
+
+| 字段         | 说明    | 类型                         | 备注                   | 是否必填 |
+|------------|-------|----------------------------|----------------------|------|
+| statusCode | 接口状态码 | Number                     | 成功：200；失败：404        | 是    |
+| message    | 接口信息  | String                     | 成功：'success' 失败：提示信息 | 是    |
+| data       | 数据    | json ({"isUpdated": true}) | 是否更新                 |      |
 
 ### 删除曲线
 
@@ -259,6 +275,7 @@ data:
 * 注册用户名提前验证
 * 使用validator[校验配置文件](https://blog.csdn.net/jianzhang11/article/details/108332727)，检查是否有jwt私钥
 * 使用validator检查请求参数、请求体等数据，配合注解`@Validated` `@Notblank`等使用
+  * 更新图形时的数据校验
 * 通过注解确定是否使用登录拦截器，拦截器中通过handler可以拿到方法，进而拿到注解
 * mybatis通过typeHandler处理数据库中的json数据
 * springboot使用全参数构造函数之后省略`@Autowired`
