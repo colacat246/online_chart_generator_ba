@@ -13,4 +13,6 @@ public interface UserGraphService {
     Result deleteSeriesById(Integer createdGraphId, String seriesId);
 
     Result updateGraph(Integer createdGraphId, Map<String, Object> data);
+
+    Result updateGraphName(Integer createdGraphId, String graphName);
 }

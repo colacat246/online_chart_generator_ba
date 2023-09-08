@@ -214,5 +214,18 @@ public class UserGraphServiceImpl implements UserGraphService {
 
     }
 
+    @Override
+    public Result updateGraphName(Integer createdGraphId, String graphName) {
+        if (createdGraphId == null || StringUtils.isEmpty(graphName))
+            return Result.ex(StatusCode.REQUEST_PARAMETER_FAULT);
+        UserVo userVo = UserThreadLocal.get();
+        // TODO 使用AOP增强此功能验证图是否属于用户
+        User2GraphMap graph = user2GraphMapMapper.getGraphByGraphId(createdGraphId);
+        if (graph == null || userVo.getUserId() != graph.getUserId())
+            return Result.ex(StatusCode.USER_NOT_MATCH);
+        Integer row = user2GraphMapMapper.updateGraphName(createdGraphId, graphName);
+        return Result.ok(true);
+    }
+
 
 }

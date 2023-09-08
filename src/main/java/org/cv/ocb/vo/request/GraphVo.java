@@ -8,5 +8,6 @@ import java.util.Map;
 @Data
 public class GraphVo {
     private Integer createdGraphId;
+    private String graphName;
     private Map<String, Object> data;
 }

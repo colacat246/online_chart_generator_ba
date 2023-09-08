@@ -33,6 +33,10 @@ public interface User2GraphMapMapper {
     @Update("update user2graph_map set `data` = #{data} where created_graph_id = #{id}")
     Integer updateGraph(@Param("id") Integer createdGraphId, @Param("data") String data);
 
+    @Update("update user2graph_map set `graph_name` = #{name} where created_graph_id = #{id}")
+    Integer updateGraphName(@Param("id") Integer createdGraphId, @Param("name") String name);
+
+
     @Delete("delete from user2graph_map where created_graph_id = #{id}")
     Integer deleteGraph(@Param("id") Integer createdGraphId);
 

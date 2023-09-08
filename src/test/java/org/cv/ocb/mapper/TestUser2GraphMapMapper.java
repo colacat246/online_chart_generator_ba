@@ -132,4 +132,13 @@ public class TestUser2GraphMapMapper {
         String s = new ObjectMapper().writeValueAsString(data);
         Assertions.assertEquals("{\"k1\":\"v1\"}", s);
     }
+    @Test
+    @DisplayName("更新graph_name")
+    public void test9() throws JsonProcessingException {
+        String newName = "新图形~~";
+        user2GraphMapMapper.updateGraphName(1, newName);
+        String graphName = user2GraphMapMapper.getGraphByGraphId(1).getGraphName();
+
+        Assertions.assertEquals(newName, graphName);
+    }
 }

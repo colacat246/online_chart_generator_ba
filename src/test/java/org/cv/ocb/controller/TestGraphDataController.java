@@ -326,4 +326,76 @@ public class TestGraphDataController {
                         .content(new ObjectMapper().writeValueAsString(data)))
                 .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(1000));
     }
+
+    @Test
+    @DisplayName("更新graphName")
+    public void test20() throws Exception {
+        String newName = "新图形~~";
+        Map<String, Object> data = Map.of("createdGraphId", 1, "graphName", newName);
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/api/userGraphName")
+                        .headers(httpHeaders)
+                        .contentType("application/json")
+                        .content(new ObjectMapper().writeValueAsString(data)))
+                .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(999))
+                .andExpect(MockMvcResultMatchers.jsonPath("data").value(true));
+    }
+
+    @Test
+    @DisplayName("更新graphName-数据为空")
+    public void test21() throws Exception {
+        String newName = "";
+        Map<String, Object> data = Map.of("createdGraphId", 1, "graphName", newName);
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/api/userGraphName")
+                        .headers(httpHeaders)
+                        .contentType("application/json")
+                        .content(new ObjectMapper().writeValueAsString(data)))
+                .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(1000));
+    }
+
+    @Test
+    @DisplayName("更新graphName-数据为空")
+    public void test22() throws Exception {
+        Map<String, Object> data = new HashMap<>() {{
+            put("createdGraphId", 1);
+            put("graphName", null);
+        }};
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/api/userGraphName")
+                        .headers(httpHeaders)
+                        .contentType("application/json")
+                        .content(new ObjectMapper().writeValueAsString(data)))
+                .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(1000));
+    }
+
+    @Test
+    @DisplayName("更新graphName-数据和用户不匹配")
+    public void test23() throws Exception {
+        Map<String, Object> data = new HashMap<>() {{
+            put("createdGraphId", 1);
+            put("graphName", "新图形");
+        }};
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/api/userGraphName")
+                        .headers(httpHeadersNotTom)
+                        .contentType("application/json")
+                        .content(new ObjectMapper().writeValueAsString(data)))
+                .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(1006));
+    }
+
+    @Test
+    @DisplayName("更新graphName-数据和用户不匹配")
+    public void test24() throws Exception {
+        Map<String, Object> data = new HashMap<>() {{
+            put("createdGraphId", 5);
+            put("graphName", "新图形");
+        }};
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/api/userGraphName")
+                        .headers(httpHeaders)
+                        .contentType("application/json")
+                        .content(new ObjectMapper().writeValueAsString(data)))
+                .andExpect(MockMvcResultMatchers.jsonPath("statusCodeValue").value(1006));
+    }
 }

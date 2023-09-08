@@ -9,7 +9,9 @@ public enum StatusCode {
     TOKEN_VERIFICATION_FAILED(1002, "Token认证失败"),
     NO_USER(1003, "找不到用户"),
     WRONG_PASSWORD(1004, "密码错误"),
-    USERNAME_DUPLICATED(1005, "用户名已占用");
+    USERNAME_DUPLICATED(1005, "用户名已占用"),
+    USER_NOT_MATCH(1006, "图形不属于用户");
+
 
     public Integer code;
     public String message;

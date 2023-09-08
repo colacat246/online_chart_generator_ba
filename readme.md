@@ -106,7 +106,7 @@ asideItem:
 | message    | 接口信息  | String | 成功：'success' 失败：提示信息 | 是    |
 | data       | 图数据   | json   |                      |      |
 
-### TODO 新建图形
+### 新建图形
 
 请求地址：`/api/userGraph/`
 请求方法：post
@@ -133,7 +133,7 @@ data字段：
 | graphList  | 更新后的图列表 | Array   |    | 是    |
 | newGraphId | 新图形的Id  | Integer |    |      |
 
-### TODO 新建series
+### 新建series
 
 请求地址：`/api/userGraphSeries/`
 请求方法：post
@@ -186,7 +186,7 @@ data字段：
 | graphList  | 更新后的图列表      | json    |              | 是    |
 | curGraphId | 更新后所跳转到的图形ID | Integer | 图列表为空时返回null |      |
 
-### TODO 更新图形
+### 更新图形
 
 请求地址：`/api/userGraph/`
 请求方法：put
@@ -200,11 +200,31 @@ data字段：
 
 返回参数：
 
-| 字段         | 说明    | 类型                         | 备注                   | 是否必填 |
-|------------|-------|----------------------------|----------------------|------|
-| statusCode | 接口状态码 | Number                     | 成功：200；失败：404        | 是    |
-| message    | 接口信息  | String                     | 成功：'success' 失败：提示信息 | 是    |
-| data       | 数据    | json ({"isUpdated": true}) | 是否更新                 |      |
+| 字段                       | 说明    | 类型                         | 备注                   | 是否必填 |
+|--------------------------|-------|----------------------------|----------------------|------|
+| statusCode               | 接口状态码 | Number                     | 成功：200；失败：404        | 是    |
+| message                  | 接口信息  | String                     | 成功：'success' 失败：提示信息 | 是    |
+| data **FIXME 没必要有这个字段了** | 数据    | json ({"isUpdated": true}) | 是否更新                 |      |
+
+### 更新图形名称
+
+请求地址：`/api/userGraphName/`
+请求方法：put
+
+请求参数：
+
+| 字段             | 说明     | 类型     | 备注 | 是否必填 |
+|----------------|--------|--------|----|------|
+| createdGraphId | 图类型的id | Number |    | 是    |
+| graphName      | 新的图形名称 | String |    | 是    |
+
+返回参数：
+
+| 字段         | 说明    | 类型      | 备注                   | 是否必填 |
+|------------|-------|---------|----------------------|------|
+| statusCode | 接口状态码 | Number  | 成功：200；失败：404        | 是    |
+| message    | 接口信息  | String  | 成功：'success' 失败：提示信息 | 是    |
+| data       | 数据    | boolean | 是否更新                 |      |
 
 ### 删除曲线
 
@@ -275,12 +295,13 @@ data:
 * 注册用户名提前验证
 * 使用validator[校验配置文件](https://blog.csdn.net/jianzhang11/article/details/108332727)，检查是否有jwt私钥
 * 使用validator检查请求参数、请求体等数据，配合注解`@Validated` `@Notblank`等使用
-  * 更新图形时的数据校验
+    * 更新图形时的数据校验
 * 通过注解确定是否使用登录拦截器，拦截器中通过handler可以拿到方法，进而拿到注解
 * mybatis通过typeHandler处理数据库中的json数据
 * springboot使用全参数构造函数之后省略`@Autowired`
 * Bean提到初始化时赋值
 * 集中处理异常
+  * 数据库连接错误 等等
 * 调整cookie过期时间
 * 处理jwt过期问题
 * 配置测试和开发使用不同数据库

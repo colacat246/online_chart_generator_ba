@@ -52,12 +52,16 @@ public class GraphDataController {
 
     @PutMapping(value = "/userGraph")
     public Result updateGraph(@RequestBody GraphVo graphVo) {
-        System.out.println("auto saved!!!");
         return userGraphService.updateGraph(graphVo.getCreatedGraphId(), graphVo.getData());
     }
     @DeleteMapping(value = "/userGraph")
     public Result deleteGraph(@RequestBody Map<String, Object> data) {
         return userGraphService.deleteGraph((Integer) data.get("createdGraphId"));
+    }
+    // todo
+    @PutMapping(value = "/userGraphName")
+    public Result updateGraphName(@RequestBody GraphVo graphVo) {
+        return userGraphService.updateGraphName(graphVo.getCreatedGraphId(), graphVo.getGraphName());
     }
 
     @PostMapping(value = "/userGraphSeries")

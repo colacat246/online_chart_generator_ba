@@ -224,6 +224,7 @@ insert into series_template (id, graph_type_id, data) values (1, 1, '
     [],
     []
   ],
+  "color": null,
   "type": "line",
   "lineStyle": {
     "width": 1.5,
