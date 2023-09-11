@@ -299,9 +299,9 @@ data:
 * 通过注解确定是否使用登录拦截器，拦截器中通过handler可以拿到方法，进而拿到注解
 * mybatis通过typeHandler处理数据库中的json数据
 * springboot使用全参数构造函数之后省略`@Autowired`
-* Bean提到初始化时赋值
 * 集中处理异常
   * 数据库连接错误 等等
 * 调整cookie过期时间
 * 处理jwt过期问题
 * 配置测试和开发使用不同数据库
+* 使用lombok @AllArgsConstructor 配合final属性进行注入

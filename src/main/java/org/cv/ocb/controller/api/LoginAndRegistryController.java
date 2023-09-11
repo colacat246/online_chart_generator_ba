@@ -1,32 +1,30 @@
 package org.cv.ocb.controller.api;
 
-import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.cv.ocb.service.LogInAndRegisterService;
+import org.cv.ocb.vo.request.UserVo;
 import org.cv.ocb.vo.response.Result;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
 public class LoginAndRegistryController {
-    public LoginAndRegistryController(LogInAndRegisterService logInAndRegisterService) {
-        this.logInAndRegisterService = logInAndRegisterService;
-    }
 
-    private LogInAndRegisterService logInAndRegisterService;
+    private final LogInAndRegisterService logInAndRegisterService;
 
     @PostMapping("/login")
-    public Result login(@RequestBody Map<String, String> data) {
-        return logInAndRegisterService.logInVerify(data.get("userName"), data.get("password"));
+    public Result login(@RequestBody @Validated(UserVo.Login.class) UserVo userVo) {
+        return logInAndRegisterService.logInVerify(userVo.getUserName(), userVo.getPassword());
 
     }
 
     @PostMapping("/register")
-    public Result register(@RequestBody Map<String, String> data) {
-        return logInAndRegisterService.register(data.get("userName"), data.get("password"));
+    public Result register(@RequestBody @Validated(UserVo.Register.class) UserVo userVo) {
+        return logInAndRegisterService.register(userVo.getUserName(), userVo.getPassword());
     }
 }

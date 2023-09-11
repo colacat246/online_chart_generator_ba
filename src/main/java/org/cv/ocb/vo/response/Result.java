@@ -9,9 +9,17 @@ public class Result {
     private String message;
     private Object data;
 
+    // 使用StatusCode enum中的message
     private Result(StatusCode statusCode, Object data) {
         this.statusCodeValue = statusCode.code;
         this.message = statusCode.message;
+        this.data = data;
+    }
+
+    // 使用自定义message
+    private Result(StatusCode statusCode, String message, Object data) {
+        this.statusCodeValue = statusCode.code;
+        this.message = message;
         this.data = data;
     }
 
@@ -21,6 +29,10 @@ public class Result {
 
     public static Result ex(StatusCode statusCode) {
         return new Result(statusCode, null);
+    }
+
+    public static Result ex(StatusCode statusCode, String message) {
+        return new Result(statusCode, message, null);
     }
 
 }
