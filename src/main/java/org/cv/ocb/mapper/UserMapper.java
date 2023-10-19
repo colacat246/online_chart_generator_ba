@@ -1,9 +1,6 @@
 package org.cv.ocb.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.cv.ocb.pojo.User;
 
 import java.util.List;
@@ -21,4 +18,7 @@ public interface UserMapper {
     @Insert("insert into user (`name`, `password`) values (#{name}, #{password})")
     @Options(useGeneratedKeys = true, keyProperty = "userId", keyColumn = "user_id")
     void insertUser(User user);
+
+    @Update("update user set `password` = #{password} where `name` = #{name}")
+    void updateUsePw(User user);
 }
